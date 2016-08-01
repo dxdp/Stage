@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  StageSafeKVO.h
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,14 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+@interface StageSafeKVO : NSObject
 
+typedef void (^StageSafeKVOBlock)(id object, NSString* keyPath, NSDictionary* changeInfo);
++ (instancetype)observer:(id)observer watchKey:(NSString*)keyPath inObject:(id)object withBlock:(StageSafeKVOBlock)block;
++ (instancetype)observer:(id)observer watchKeys:(NSArray*)keyPaths inObject:(id)object withBlock:(StageSafeKVOBlock)block;
+
+- (void)stopObserving;
+
+@end

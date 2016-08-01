@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  StageRuntimeHelpers.m
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,32 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "StageRuntimeHelpers.h"
+#import "NSObject+Stage.h"
+#import "objc/runtime.h"
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+@implementation NSObject (StageRuntimeHelpers)
++ (nullable id) stagePropertyRegistration { return nil; }
+@end
 
+@implementation StageRuntimeHelpers
+
+// TODO: Inject view factory definitions
++ (UIView *)makeViewWithClass:(Class)cls {
+    NSAssert([cls isSubclassOfClass:[UIView class]], @"Must be subclass of UIView");
+    return [[cls alloc] initWithFrame:CGRectZero];
+}
+
++ (NSArray *)inheritanceChainRegistriesForView:(UIView *)view {
+    Class current = view.class;
+    Class final = [UIView superclass];
+    NSMutableArray* chain = [NSMutableArray new];
+    while (current != final) {
+        id next = [current stagePropertyRegistration];
+        if (next && chain.lastObject != next) { [chain addObject:next]; }
+        current = current.superclass;
+    }
+    return [chain copy];
+}
+
+@end

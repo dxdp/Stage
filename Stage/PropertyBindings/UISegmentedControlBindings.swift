@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  UISegmentedControlBindings.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,19 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
-
+private var propertyTable = {
+    return tap(StagePropertyRegistration()) {
+        $0.register("items") { scanner -> [String] in try scanner.scanList(scanner.scanUpToString(",")) }
+            .apply { (view: UISegmentedControl, value) in
+                view.removeAllSegments()
+                value.forEach { segmentText in
+                    view.insertSegmentWithTitle(segmentText, atIndex: view.numberOfSegments, animated: false)
+                }
+        }
+    }
+}()
+public extension UISegmentedControl {
+    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
+}

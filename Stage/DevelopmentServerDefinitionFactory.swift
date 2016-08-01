@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  DevelopmentServerDefinitionFactory.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,17 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
-
+public class DevelopmentServerDefinitionFactory : DefaultDefinitionFactory {
+    public override init(bundles: [NSBundle] = [.mainBundle()] + NSBundle.allFrameworks()) {
+        super.init(bundles: bundles)
+    }
+    public override func build(contentsOfFile file: String, encoding: NSStringEncoding) throws -> StageDefinition {
+        let devServerURL = NSURL(string: "http://localhost:34567/\(file)")
+        if let url = devServerURL, data = NSData(contentsOfURL: url) {
+            return try build(data: data, encoding: encoding)
+        }
+        return try super.build(contentsOfFile: file, encoding: encoding)
+    }
+}

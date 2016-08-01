@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  Mapper.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,20 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+public class Mapper {
+    let context: StageLiveContext
+    init(context: StageLiveContext) {
+        self.context = context
+    }
+
+    public func view<T:UIView>(named name: String) throws -> T {
+        return try context.view(named: name)
+    }
+}
+
+public protocol StageViewMapping {
+    init(map: Mapper) throws
+}
 

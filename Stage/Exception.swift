@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  Exception.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,15 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+public enum StageException: ErrorType {
+    case InvalidDataEncoding
+    case ResourceNotAvailable(name: String, message: String)
+    case UnrecognizedContent(message: String, line: Int)
+    case UnknownViewHierarchy(message: String)
+    case InvalidViewType(message: String)
+    case UnknownView(message: String)
+    case UnhandledProperty(message: String)
+}
 

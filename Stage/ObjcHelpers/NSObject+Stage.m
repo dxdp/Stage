@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  NSObject+Stage.m
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,41 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "NSObject+Stage.h"
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+#import "objc/runtime.h"
 
+@interface StageDeallocationBlock : NSObject
+@property (nonatomic,copy) VoidBlock block;
+@end
+
+@implementation StageDeallocationBlock
+
+- (instancetype)initWithBlock:(VoidBlock)block {
+    self = [super init];
+    if (self) {
+        _block = [block copy];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    self.block();
+}
+
+@end
+
+@implementation NSObject (Stage)
+
+- (void)stage_onDeallocExecuteBlock:(VoidBlock)block {
+    if (!block) {
+        return;
+    }
+
+    static void* kOnDeallocationBlocks = &kOnDeallocationBlocks;
+    NSMutableArray* scheduledBlocks = objc_getAssociatedObject(self, kOnDeallocationBlocks) ?: [NSMutableArray new];
+    [scheduledBlocks addObject:[[StageDeallocationBlock alloc] initWithBlock:block]];
+    objc_setAssociatedObject(self, kOnDeallocationBlocks, scheduledBlocks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end

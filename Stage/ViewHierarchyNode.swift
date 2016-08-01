@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  ViewHierarchyNode.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,24 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+class StageViewHierarchyNode {
+    let name: String
+    let indentLevel: Int
+    var children: [StageViewHierarchyNode] = []
+    weak var parent: StageViewHierarchyNode?
 
+    init(name: String, indentLevel: Int) {
+        self.name = name
+        self.indentLevel = indentLevel
+    }
+
+    func addChild(name: String, indentLevel: Int) -> StageViewHierarchyNode {
+        assert(indentLevel > self.indentLevel)
+        let subnode = StageViewHierarchyNode(name: name, indentLevel: indentLevel)
+        subnode.parent = self
+        children.append(subnode)
+        return subnode
+    }
+}

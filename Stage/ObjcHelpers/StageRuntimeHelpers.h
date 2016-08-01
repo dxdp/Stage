@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  StageRuntimeHelpers.h
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,13 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+@interface StageRuntimeHelpers : NSObject
 
++ (nullable UIView*)makeViewWithClass:(nonnull Class)cls;
+
++ (nonnull NSArray*)inheritanceChainRegistriesForView:(nonnull UIView*)view
+    NS_SWIFT_NAME(inheritanceChainRegistries(for:));
+@end

@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  ViewBinding.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,23 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+enum StageViewBinding: Equatable {
+    case ContainerSurrogate
+    case SpecificView(view: UIView)
 
+    var view: UIView? {
+        switch self {
+        case .SpecificView(let view): return view
+        default: return nil
+        }
+    }
+}
+func == (left: StageViewBinding, right: StageViewBinding) -> Bool {
+    switch (left, right) {
+    case (.ContainerSurrogate, .ContainerSurrogate): return true
+    case (.SpecificView(let v1), .SpecificView(let v2)): return v1 == v2
+    default: return false
+    }
+}

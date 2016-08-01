@@ -1,5 +1,5 @@
 //
-//  Stage.h
+//  UIView+Stage.m
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,10 +19,24 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "UIView+Stage.h"
 
-#import <Stage/StageRuntimeHelpers.h>
-#import <Stage/NSObject+Stage.h>
-#import <Stage/UIView+Stage.h>
-#import <Stage/StageSafeKVO.h>
+@implementation UIView (Stage)
 
+- (void)stage_setShadowOpacity:(CGFloat)opacity {
+    if ([self respondsToSelector:@selector(setShadowOpacity:)]) {
+        [(id)self setShadowOpacity:opacity];
+    } else {
+        [self.layer setShadowOpacity:opacity];
+    }
+}
+
+- (void)stage_setShadowRadius:(CGFloat)radius {
+    if ([self respondsToSelector:@selector(setShadowRadius:)]) {
+        [(id)self setShadowRadius:radius];
+    } else {
+        [self.layer setShadowRadius:radius];
+    }
+}
+
+@end
