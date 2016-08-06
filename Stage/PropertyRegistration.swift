@@ -24,6 +24,21 @@ import Foundation
 typealias TypelessScanFunction = StageRuleScanner throws -> Any
 typealias TypelessApplyFunction = (view: UIView, value: Any) throws -> ()
 typealias TypelessApplyWithContextFunction = (view: UIView, value: Any, context: StageLiveContext) throws -> ()
+struct Handlers {
+    let scan: TypelessScanFunction
+    let apply: TypelessApplyFunction?
+    let applyWithContext: TypelessApplyWithContextFunction?
+
+    func with(apply handler: TypelessApplyFunction) -> Handlers {
+        return Handlers(scan: scan, apply: handler, applyWithContext: applyWithContext)
+    }
+    func with(applyWithContext handler: TypelessApplyWithContextFunction) -> Handlers {
+        return Handlers(scan: scan, apply: apply, applyWithContext: handler)
+    }
+    var asTuple: (TypelessScanFunction, TypelessApplyFunction?, TypelessApplyWithContextFunction?) {
+        return (scan, apply, applyWithContext)
+    }
+}
 
 enum PropertySetPass {
     case ViewConstruction
@@ -43,15 +58,12 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
     let name: String
     let scanFunction: ScanFunction
     weak var registration: StagePropertyRegistration?
-    var handlers: (
-        scan: TypelessScanFunction,
-        apply: TypelessApplyFunction,
-        applyWithContext: TypelessApplyWithContextFunction
-    )?
+    var handlers: Handlers
     init(registration: StagePropertyRegistration, name: String, scan: ScanFunction) {
         self.name = name
         self.scanFunction = scan
         self.registration = registration
+        self.handlers = Handlers(scan: scan, apply: nil, applyWithContext: nil)
     }
 
     lazy var boxingScan: TypelessScanFunction = {
@@ -66,12 +78,7 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
                 try function(view: view, value: value)
             }
         }
-        let boxingApplyWithContext: TypelessApplyWithContextFunction = { view, value, context in }
-        let applyWithContext = handlers != nil ? handlers!.applyWithContext : boxingApplyWithContext
-        handlers = (
-            scan: boxingScan,
-            apply: boxingApply,
-            applyWithContext: applyWithContext)
+        handlers = handlers.with(apply: boxingApply)
         registration?.converters[name] = self
         return self
     }
@@ -81,26 +88,19 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
                 try function(view: view, value: value, context: context)
             }
         }
-        let boxingApply: TypelessApplyFunction = { view, value in }
-        let apply = handlers != nil ? handlers!.apply : boxingApply
-        handlers = (
-            scan: boxingScan,
-            apply: apply,
-            applyWithContext: boxingApplyWithContext
-        )
+        handlers = handlers.with(applyWithContext: boxingApplyWithContext)
         registration?.converters[name] = self
         return self
     }
 
     func execute(scanner: StageRuleScanner, view: UIView, pass: PropertySetPass) throws {
-        if let (scan, apply, applyWithContext) = handlers {
-            let value = try scan(scanner)
-            switch pass {
-            case .ViewConstruction:
-                try apply(view: view, value: value)
-            case .TreeConstruction(let context):
-                try applyWithContext(view: view, value: value, context: context)
-            }
+        let (scan, apply, applyWithContext) = handlers.asTuple
+        let value = try scan(scanner)
+        switch pass {
+        case .ViewConstruction:
+            try apply?(view: view, value: value)
+        case .TreeConstruction(let context):
+            try applyWithContext?(view: view, value: value, context: context)
         }
     }
 }
@@ -114,7 +114,10 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
 
     @nonobjc func receive(property name: String, scanner: StageRuleScanner, view: UIView, pass: PropertySetPass) throws {
         guard let converter = converters[name] else {
-            throw StageException.UnhandledProperty(message: "No setter defined for property '\(name)' on type \(view.dynamicType)")
+            throw StageException.UnhandledProperty(
+                message: "No setter defined for property '\(name)' on type \(view.dynamicType)",
+                line: 0,
+                backtrace: [])
         }
         try converter.execute(scanner, view: view, pass: pass)
     }

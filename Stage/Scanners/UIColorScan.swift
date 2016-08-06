@@ -24,33 +24,47 @@ import Swift
 
 public extension StageRuleScanner {
     public func scanUIColor() throws -> UIColor {
-        var leading: NSString?
-        let location = scanLocation
-        if scanCharactersFromSet(NSCharacterSet(charactersInString: "rgba#"), intoString: &leading) && leading != nil {
-            switch leading as! String {
-            case "rgba": return try scanUIColor_rgba()
-            case "rgb": return try scanUIColor_rgb()
-            case let x where x.hasPrefix("#"):
-                scanLocation -= leading!.length - 1
-                return try scanUIColor_webHex()
-            default: break
+        do {
+            var leading: NSString?
+            let location = scanLocation
+            if scanCharactersFromSet(NSCharacterSet(charactersInString: "rgba#"), intoString: &leading) && leading != nil {
+                switch leading as! String {
+                case "rgba": return try scanUIColor_rgba()
+                case "rgb": return try scanUIColor_rgb()
+                case let x where x.hasPrefix("#"):
+                    scanLocation -= leading!.length - 1
+                    return try scanUIColor_webHex()
+                default: break
+                }
+            }
+
+            scanLocation = location
+            var colorName: NSString?
+            guard scanUpToString(" ", intoString: &colorName) && colorName != nil else {
+                throw StageException.UnrecognizedContent(
+                    message: "\(string) is not recognized as a valid value for UIColor",
+                    line: startingLine,
+                    backtrace: [])
+            }
+            return try UIColor(name: colorName as! String)
+        } catch let ex as StageException {
+            switch ex {
+            case .UnrecognizedContent(let message, let line, let bt) where line == 0:
+                throw StageException.UnrecognizedContent(message: message, line: startingLine, backtrace: bt)
+            default:
+                throw ex
             }
         }
-
-        scanLocation = location
-        var colorName: NSString?
-        guard scanUpToString(" ", intoString: &colorName) && colorName != nil else {
-            throw StageException.UnrecognizedContent(message: "\(string) is not recognized as a valid value for UIColor", line: startingLine)
-        }
-        return try UIColor(name: colorName as! String)
     }
 
     private func scanUIColor_rgba() throws -> UIColor {
         let dims = try scanBracedList(open: "(", close: ")", itemScan: scanNSNumber())
         guard case let (r, g, b, a) = (dims[0].intValue, dims[1].intValue, dims[2].intValue, dims[3].floatValue)
         where dims.count == 4 && (0..<256) ~= r && (0..<256) ~= g && (0..<256) ~= b && (0.0...1.0) ~= a else {
-            throw StageException.UnrecognizedContent(message: "Expected color format rgba(R, G, B, A) but saw \(string)",
-                                                     line: startingLine)
+            throw StageException.UnrecognizedContent(
+                message: "Expected color format rgba(R, G, B, A) but saw \(string). RGB must be in 0-255 inclusive and A must be 0-1",
+                line: startingLine,
+                backtrace: [])
         }
         return UIColor(colorLiteralRed: Float(r)/255,
                        green: Float(g)/255,
@@ -62,8 +76,10 @@ public extension StageRuleScanner {
         let dims = try scanBracedList(open: "(", close: ")", itemScan: scanNSNumber())
         guard case let (r, g, b) = (dims[0].intValue, dims[1].intValue, dims[2].intValue)
             where dims.count == 3 && (0..<256) ~= r && (0..<256) ~= g && (0..<256) ~= b else {
-            throw StageException.UnrecognizedContent(message: "Expected color format rgb(R, G, B) but saw \(string)",
-                                                     line: startingLine)
+            throw StageException.UnrecognizedContent(
+                message: "Expected color format rgb(R, G, B) but saw \(string). RGB must be in 0-255 inclusive",
+                line: startingLine,
+                backtrace: [])
         }
         return UIColor(colorLiteralRed: Float(r)/255,
                        green: Float(g)/255,
@@ -75,7 +91,8 @@ public extension StageRuleScanner {
         var colorString: NSString?
         guard scanCharactersFromSet(.hexnumericCharacterSet(), intoString: &colorString) && colorString != nil else {
             throw StageException.UnrecognizedContent(message: "Expected web hex-numeric color specification",
-                                                     line: startingLine)
+                                                     line: startingLine,
+                                                     backtrace: [])
         }
         return try UIColor(webHex: colorString as! String)
     }
@@ -393,7 +410,7 @@ public extension UIColor {
             compute = (shift: 4, mult: 1)
             alphaMask = x == 8 ? 0 : alphaMask
         default:
-            throw StageException.UnrecognizedContent(message: "Unrecognized content \(string) for UIColor", line: 0)
+            throw StageException.UnrecognizedContent(message: "Unrecognized content \(string) for UIColor", line: 0, backtrace: [])
         }
 
         let values: [UInt32] = try string.characters.map { character throws -> UInt32 in
@@ -407,7 +424,7 @@ public extension UIColor {
             case "A", "B", "C", "D", "E", "F":
                 add = 10 + scalar - "A".unicodeScalars.first!.value
             default:
-                throw StageException.UnrecognizedContent(message: "Unrecognized content \(string) for UIColor", line: 0)
+                throw StageException.UnrecognizedContent(message: "Unrecognized content \(string) for UIColor", line: 0, backtrace: [])
             }
             return add
         }
@@ -423,7 +440,7 @@ public extension UIColor {
 
     convenience init(name: String) throws {
         guard let webColor = WebColors.init(rawValue: name.trimmed().lowercaseString) else {
-            throw StageException.UnrecognizedContent(message: "Unrecognized content \(name) for UIColor", line: 0)
+            throw StageException.UnrecognizedContent(message: "Unrecognized content \(name) for UIColor", line: 0, backtrace: [])
         }
         try self.init(webColor: webColor)
     }

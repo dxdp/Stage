@@ -25,7 +25,10 @@ public extension StageRuleScanner {
     public func scanCGPoint() throws -> CGPoint {
         let dims = try scanBracedList(open: "{", close: "}", itemScan: scanCGFloat())
         guard dims.count == 2 else {
-            throw StageException.UnrecognizedContent(message: "Expected point to be in format: {x, y}, but saw \(string)", line: startingLine)
+            throw StageException.UnrecognizedContent(
+                message: "Expected point to be in format: {x, y}, but saw \(string)",
+                line: startingLine,
+                backtrace: [])
         }
         return CGPointMake(dims[0], dims[1])
     }
@@ -33,7 +36,10 @@ public extension StageRuleScanner {
     public func scanCGSize() throws -> CGSize {
         let dims = try scanBracedList(open: "{", close: "}", itemScan: scanCGFloat())
         guard dims.count == 2 else {
-            throw StageException.UnrecognizedContent(message: "Expected size to be in format: {width, height}, but saw \(string)", line: startingLine)
+            throw StageException.UnrecognizedContent(
+                message: "Expected size to be in format: {width, height}, but saw \(string)",
+                line: startingLine,
+                backtrace: [])
         }
         return CGSizeMake(dims[0], dims[1])
     }
@@ -41,7 +47,10 @@ public extension StageRuleScanner {
     public func scanUIEdgeInsets() throws -> UIEdgeInsets {
         let dims = try scanBracedList(open: "{", close: "}", itemScan: scanCGFloat())
         guard dims.count == 4 else {
-            throw StageException.UnrecognizedContent(message: "Expected edge insets to be in format: {top, left, bottom, right}, but saw \(string)", line: startingLine)
+            throw StageException.UnrecognizedContent(
+                message: "Expected edge insets to be in format: {top, left, bottom, right}, but saw \(string)",
+                line: startingLine,
+                backtrace: [])
         }
         return UIEdgeInsetsMake(dims[0], dims[1], dims[2], dims[3])
     }

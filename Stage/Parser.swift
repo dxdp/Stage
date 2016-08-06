@@ -25,6 +25,11 @@ import UIKit
 // MARK: - Stage Begin
 
 class StageParser {
+    let errorListener: StageDefinitionErrorListener?
+    init(errorListener: StageDefinitionErrorListener?) {
+        self.errorListener = errorListener
+    }
+
     class Context {
         let lines: [String]
         var currentPosition: Int = 0
@@ -53,15 +58,24 @@ class StageParser {
         return regex.stringByReplacingMatchesInString(text, options: .Anchored, range: text.entireRange, withTemplate: "")
     }
 
-    func parse(lines: [String]) throws -> StageDefinition {
+    func parse(lines: [String], identifier: String? = nil) throws -> StageDefinition {
         let parseContext = Context(lines: lines.map { preprocessLine($0) })
-        let stageDefinition = StageDefinition()
+        let stageDefinition = StageDefinition(errorListener: errorListener)
+        stageDefinition.debugIdentifier = identifier ?? ""
         while let line = parseContext.nextLine() {
             if line.isEmpty { continue }
             if line.hasSuffix(":") {
-                try parse(declaration: line, into: stageDefinition, context: parseContext)
+                let lineNumber = parseContext.currentPosition
+                do {
+                    try parse(declaration: line, into: stageDefinition, context: parseContext)
+                } catch let ex as StageException {
+                    throw ex.withBacktraceMessage("while parsing declaration on line \(lineNumber)")
+                }
             } else {
-                throw StageException.UnrecognizedContent(message: "Unrecognized plain text. Add ':' to the end to make a declaration", line: parseContext.currentLine)
+                throw StageException.UnrecognizedContent(
+                    message: "Unrecognized plain text. Add ':' to the end to make a declaration",
+                    line: parseContext.currentLine,
+                    backtrace: [])
             }
         }
         return stageDefinition
@@ -70,28 +84,39 @@ class StageParser {
     func parse(declaration line: String, into stageDefinition: StageDefinition, context: Context) throws {
         let declarationNames = line.substringToIndex(line.endIndex.predecessor())
         let allNames = declarationNames.componentsSeparatedByString(",").map { $0.trimmed() }
-        var rules = [String]()
+        var rules = [(String, Int)]()
         while let nextRule = context.peekLine() where !nextRule.hasSuffix(":") {
+            let lineNumber = context.currentLine
             context.forward()
             if case let trimmed = nextRule.trimmed() where trimmed.isEmpty { continue }
-            rules.append(nextRule)
+            rules.append((nextRule, lineNumber))
         }
         try allNames.forEach { name in
-            try parse(rules: rules, into: stageDefinition, name: name)
+            do {
+                try parse(rules: rules, into: stageDefinition, name: name)
+            } catch let ex as StageException {
+                throw ex.withBacktraceMessage("while parsing declarations for \(name)")
+            }
         }
     }
 
-    func parse(rules rules: [String], into stageDefinition: StageDefinition, name: String) throws {
+    func parse(rules rules: [(String, Int)], into stageDefinition: StageDefinition, name: String) throws {
         guard rules.count > 0 else { return }
 
         let interpreter: StageDeclarationInterpreter
-        if let x = rules.first?.trimmed() where x.hasPrefix(".") {
+        if let x = rules.first?.0.trimmed() where x.hasPrefix(".") {
             interpreter = PropertySettersInterpreter()
         } else {
             interpreter = ViewHierarchyInterpreter()
         }
 
-        try rules.enumerate().forEach { index, text in try interpreter.next(text, lineNumber: index + 0 /*TODO:line#*/) }
+        try rules.forEach { text, lineNumber in
+            do {
+                try interpreter.next(text, lineNumber: lineNumber)
+            } catch let ex as StageException {
+                throw ex.withBacktraceMessage("while parsing rule for declaration \(name)")
+            }
+        }
         interpreter.amend(stageDefinition[name])
     }
 }

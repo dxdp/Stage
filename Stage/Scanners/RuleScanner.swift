@@ -57,7 +57,7 @@ public class StageRuleScanner: NSScanner {
     public func scanBool() throws -> Bool {
         var next: NSString? = nil
         guard scanUpToCharactersFromSet(.whitespaceCharacterSet(), intoString: &next) && next != nil else {
-            throw StageException.UnrecognizedContent(message: "Expecting Bool but received \(string)", line: startingLine)
+            throw StageException.UnrecognizedContent(message: "Expecting Bool but received \(string)", line: startingLine, backtrace: [])
         }
         return next!.boolValue
     }
@@ -72,10 +72,10 @@ public class StageRuleScanner: NSScanner {
             && numberText != nil
             && StageRuleScanner.nsNumberMatch.numberOfMatchesInString(numberText as! String, options: .init(rawValue: 0), range: (numberText as! String).entireRange) == 1
             else {
-                throw StageException.UnrecognizedContent(message: "Expected number but received \(string)", line: startingLine)
+                throw StageException.UnrecognizedContent(message: "Expected number but received \(string)", line: startingLine, backtrace: [])
         }
         guard let number = StageRuleScanner.nsNumberFormatter.numberFromString(numberText! as String) else {
-            throw StageException.UnrecognizedContent(message: "Expected number but received \(string)", line: startingLine)
+            throw StageException.UnrecognizedContent(message: "Expected number but received \(string)", line: startingLine, backtrace: [])
         }
         return number
     }
@@ -83,7 +83,8 @@ public class StageRuleScanner: NSScanner {
     public func scanInt() throws -> Int {
         var out: Int32 = 0
         guard scanInt(&out) else { throw StageException.UnrecognizedContent(message: "Expected integer but saw \(string)",
-                                                                            line: startingLine) }
+                                                                            line: startingLine,
+                                                                            backtrace: []) }
         return Int(out)
     }
 
@@ -104,11 +105,12 @@ public class StageRuleScanner: NSScanner {
     }
     public func scanBracedList<T>(open open: String = "{", close: String = "}",
                                @autoclosure itemScan: () throws -> T) throws -> [T] {
-        if open.isEmpty && !scanString(open, intoString: nil) {
+        if !open.isEmpty && !scanString(open, intoString: nil) {
             throw StageException.UnrecognizedContent(message: "Expected \(open) to open list but saw \(string)",
-                                                     line: startingLine)
+                                                     line: startingLine,
+                                                     backtrace: [])
         }
-        var output = [T](), gotRightBrace = !close.isEmpty
+        var output = [T](), gotRightBrace = close.isEmpty
         while !atEnd {
             if !close.isEmpty && scanString(close, intoString: nil) {
                 gotRightBrace = true
@@ -120,7 +122,8 @@ public class StageRuleScanner: NSScanner {
 
         if !gotRightBrace {
             throw StageException.UnrecognizedContent(message: "Expected \(close) to close list but saw \(string)",
-                                                     line: startingLine)
+                                                     line: startingLine,
+                                                     backtrace: [])
         }
         return output
     }
@@ -128,7 +131,7 @@ public class StageRuleScanner: NSScanner {
     public func scanUpToCharactersFromSet(set: NSCharacterSet) throws -> String {
         var string: NSString?
         guard scanUpToCharactersFromSet(set, intoString: &string) && string != nil else {
-            throw StageException.UnrecognizedContent(message: "Unable to scan to characters in set", line: startingLine)
+            throw StageException.UnrecognizedContent(message: "Unable to scan to characters in set", line: startingLine, backtrace: [])
         }
         return string as! String
     }
@@ -136,7 +139,7 @@ public class StageRuleScanner: NSScanner {
     public func scanUpToString(string: String) throws -> String {
         var value: NSString?
         guard scanUpToString(string, intoString: &value) && value != nil else {
-            throw StageException.UnrecognizedContent(message: "Unable to scan up through \(string)", line: startingLine)
+            throw StageException.UnrecognizedContent(message: "Unable to scan up through \(string)", line: startingLine, backtrace: [])
         }
         return value as! String
     }

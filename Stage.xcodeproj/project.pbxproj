@@ -42,6 +42,10 @@
 		044898D11D4FCD330026F43A /* ViewBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898B01D4FCD330026F43A /* ViewBinding.swift */; };
 		044898D21D4FCD330026F43A /* ViewHierarchyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898B11D4FCD330026F43A /* ViewHierarchyNode.swift */; };
 		044898D61D4FCEA80026F43A /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898D51D4FCEA80026F43A /* Parser.swift */; };
+		04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */; };
+		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
+		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
+		04D3B6561D53B7D4002800F0 /* StackingViewBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +86,10 @@
 		044898B01D4FCD330026F43A /* ViewBinding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewBinding.swift; sourceTree = "<group>"; };
 		044898B11D4FCD330026F43A /* ViewHierarchyNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewHierarchyNode.swift; sourceTree = "<group>"; };
 		044898D51D4FCEA80026F43A /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorConsole.swift; sourceTree = "<group>"; };
+		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
+		04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingViewBindings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +122,8 @@
 		0448987F1D4FCCDB0026F43A /* Stage */ = {
 			isa = PBXGroup;
 			children = (
+				04D3B6521D52B420002800F0 /* ComponentViews */,
+				04D3B64D1D52B23D002800F0 /* Extensions */,
 				044898951D4FCD330026F43A /* ObjcHelpers */,
 				0448989E1D4FCD330026F43A /* PropertyBindings */,
 				044898A71D4FCD330026F43A /* Scanners */,
@@ -121,6 +131,7 @@
 				0448988F1D4FCD330026F43A /* DefaultDefinitionFactory.swift */,
 				044898901D4FCD330026F43A /* Definition.swift */,
 				044898911D4FCD330026F43A /* DevelopmentServerDefinitionFactory.swift */,
+				04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */,
 				044898921D4FCD330026F43A /* Exception.swift */,
 				044898931D4FCD330026F43A /* LiveContext.swift */,
 				044898941D4FCD330026F43A /* Mapper.swift */,
@@ -176,6 +187,23 @@
 				044898AE1D4FCD330026F43A /* UIStructuresScan.swift */,
 			);
 			path = Scanners;
+			sourceTree = "<group>";
+		};
+		04D3B64D1D52B23D002800F0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				04D3B64E1D52B244002800F0 /* UIView.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04D3B6521D52B420002800F0 /* ComponentViews */ = {
+			isa = PBXGroup;
+			children = (
+				04D3B6531D52B420002800F0 /* StackingView.swift */,
+				04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */,
+			);
+			path = ComponentViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,9 +288,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D3B64F1D52B244002800F0 /* UIView.swift in Sources */,
 				044898C71D4FCD330026F43A /* UIViewBindings.swift in Sources */,
 				044898B21D4FCD330026F43A /* Declaration.swift in Sources */,
 				044898D61D4FCEA80026F43A /* Parser.swift in Sources */,
+				04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */,
 				044898C01D4FCD330026F43A /* UIView+Stage.m in Sources */,
 				044898BC1D4FCD330026F43A /* StageRuntimeHelpers.m in Sources */,
 				044898B71D4FCD330026F43A /* LiveContext.swift in Sources */,
@@ -286,7 +316,9 @@
 				044898CB1D4FCD330026F43A /* UIColorScan.swift in Sources */,
 				044898C91D4FCD330026F43A /* EnumScanner.swift in Sources */,
 				044898BE1D4FCD330026F43A /* StageSafeKVO.m in Sources */,
+				04D3B6561D53B7D4002800F0 /* StackingViewBindings.swift in Sources */,
 				044898B41D4FCD330026F43A /* Definition.swift in Sources */,
+				04D3B6541D52B420002800F0 /* StackingView.swift in Sources */,
 				044898B51D4FCD330026F43A /* DevelopmentServerDefinitionFactory.swift in Sources */,
 				044898CF1D4FCD330026F43A /* UIStructuresScan.swift in Sources */,
 				044898B31D4FCD330026F43A /* DefaultDefinitionFactory.swift in Sources */,
@@ -441,6 +473,7 @@
 				044898871D4FCCDB0026F43A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

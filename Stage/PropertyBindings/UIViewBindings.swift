@@ -71,6 +71,10 @@ private var UIView_propertyTable = {
         $0.register("autoresize") { scanner -> UIViewAutoresizing in try scanner.scanUIViewAutoresizing() }
             .apply { (view: UIView, value) in view.autoresizingMask = value }
 
+        $0.register("constrainToSuperviewEdges") { scanner -> Bool in try scanner.scanBool() }
+            .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = false }
+            .apply { (view: UIView, value, context) in if (value) { view.constrainToSuperviewEdges() } }
+
         $0.register("horizontalCompressionResistance") { scanner -> UILayoutPriority in try scanner.scanFloat() }
             .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis:.Vertical) }
         $0.register("horizontalContentHuggingPriority") { scanner -> UILayoutPriority in try scanner.scanFloat() }

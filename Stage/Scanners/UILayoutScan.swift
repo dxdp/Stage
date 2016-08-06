@@ -51,7 +51,8 @@ private var constraintParseExpression = { () -> NSRegularExpression in
 public extension StageRuleScanner {
 
     public func scanStageLayoutConstraints() throws -> [StageLayoutConstraint] {
-        let constraints = string.componentsSeparatedByString("\n").flatMap { line -> StageLayoutConstraint? in
+        let constraints = string.componentsSeparatedByString("\n").enumerate().flatMap { lineNumber, line -> StageLayoutConstraint? in
+            let currentLine = startingLine + lineNumber
             if line.isEmpty { return nil }
             let matches = constraintParseExpression.matchesInString(line, options: .init(rawValue: 0), range: line.entireRange)
             guard case let match = matches[0] where matches.count == 1 else {
@@ -69,7 +70,7 @@ public extension StageRuleScanner {
                 return line.substringWithRange(start..<end)
             }
 
-            // The first two groups are not optional, so in order to match they must also exist
+            // The first two groups are not optional, so to match they must also exist. This implies we can unwrap them immediately
             let selfAttributeText   = captureGroup(1)!
             let relationText        = captureGroup(2)!
             let targetText          = captureGroup(3)
@@ -86,18 +87,27 @@ public extension StageRuleScanner {
                 switch (targetText, targetAttributeText) {
                 case (let x, let y) where x == nil && y == nil: return .NotAnAttribute
                 case (let x, let y) where x != nil && y != nil: return try scanner(targetAttributeText!).scanNSLayoutAttribute()
-                default: throw StageException.UnrecognizedContent(message: "Failed to parse target and attribute", line: 0)
+                default: throw StageException.UnrecognizedContent(
+                    message: "Failed to parse target and attribute",
+                    line: currentLine,
+                    backtrace: [])
                 }
             }
             func multiplier() throws -> CGFloat {
                 guard let multiplyOpText = multiplyOpText else { return 1 }
                 guard let multiplyFactorText = multiplyFactorText else {
-                    throw StageException.UnrecognizedContent(message: "Layout attribute multiplication specified without a factor", line: 0)
+                    throw StageException.UnrecognizedContent(
+                        message: "Layout attribute multiplication specified without a factor",
+                        line: currentLine,
+                        backtrace: [])
                 }
                 var factor = try scanner(multiplyFactorText).scanCGFloat()
                 if multiplyOpText == "/" {
                     if abs(factor) < 0.00001 {
-                        throw StageException.UnrecognizedContent(message: "Ignoring layout due to division of zero", line: 0)
+                        throw StageException.UnrecognizedContent(
+                            message: "Ignoring layout due to division of zero",
+                            line: currentLine,
+                            backtrace: [])
                     }
                     factor = 1 / factor
                 }
@@ -106,7 +116,10 @@ public extension StageRuleScanner {
             func constant() throws -> CGFloat {
                 guard let addendText = addendText else { return 0 }
                 if addOpText == nil && targetText != nil {
-                    throw StageException.UnrecognizedContent(message: "Missing add operator (+ or -) between target and constant", line: 0)
+                    throw StageException.UnrecognizedContent(
+                        message: "Missing add operator (+ or -) between target and constant",
+                        line: currentLine,
+                        backtrace: [])
                 }
                 var value = try scanner(addendText).scanCGFloat()
                 if let addOpText = addOpText where addOpText == "-" {

@@ -28,4 +28,6 @@
 
 + (nonnull NSArray*)inheritanceChainRegistriesForView:(nonnull UIView*)view
     NS_SWIFT_NAME(inheritanceChainRegistries(for:));
+
++ (void)loadReveal;
 @end

@@ -38,6 +38,7 @@ public extension StageRuleScanner {
         if let font = UIFont(name: name, size: finalSize) { return font }
         throw StageException.UnrecognizedContent(
             message: "Unable to create font for name: \(name) size: \(finalSize)",
-            line: startingLine)
+            line: startingLine,
+            backtrace: [])
     }
 }

@@ -21,6 +21,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface StageSafeKVO : NSObject
 
 typedef void (^StageSafeKVOBlock)(id object, NSString* keyPath, NSDictionary* changeInfo);
@@ -30,3 +32,5 @@ typedef void (^StageSafeKVOBlock)(id object, NSString* keyPath, NSDictionary* ch
 - (void)stopObserving;
 
 @end
+
+NS_ASSUME_NONNULL_END

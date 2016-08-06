@@ -23,12 +23,14 @@ import Foundation
 
 public class EnumScanner<EnumType> {
     private let map: [String: EnumType]
+    private let lineNumber: Int
     private let characterSet: NSCharacterSet
-    public init(map: [String: EnumType], characterSet: NSCharacterSet = .alphanumericCharacterSet()) {
+    public init(map: [String: EnumType], lineNumber: Int, characterSet: NSCharacterSet = .alphanumericCharacterSet()) {
         map.keys.forEach { key in
             assert(key.trimmed().lowercaseString == key, "All keys in the enum value map should be lowercase and trimmed. Failing for '\(key)'")
         }
         self.map = map
+        self.lineNumber = lineNumber
         self.characterSet = characterSet
     }
 
@@ -37,12 +39,14 @@ public class EnumScanner<EnumType> {
         guard scanner.scanCharactersFromSet(characterSet, intoString: &word) && word != nil else {
             throw StageException.UnrecognizedContent(
                 message: "Unrecognized value \(scanner.string) for \(EnumType.self). Possible values: \(Array(map.keys))",
-                line: 0)
+                line: lineNumber,
+                backtrace: [])
         }
         guard let value = map[word as! String] else {
             throw StageException.UnrecognizedContent(
                 message: "Unrecognized value \(scanner.string) for \(EnumType.self). Possible values: \(Array(map.keys))",
-                line: 0)
+                line: lineNumber,
+                backtrace: [])
         }
         return value
     }

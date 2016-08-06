@@ -23,7 +23,7 @@ import Foundation
 
 class StageDeclaration {
     let name: String
-    var propertyMap: [String:String] = [:]
+    var propertyMap: [String: (String, Int)] = [:]
     var viewHierarchy: StageViewHierarchyNode?
 
     init(name: String) {
@@ -39,12 +39,14 @@ protocol StageDeclarationInterpreter {
 class PropertySettersInterpreter: StageDeclarationInterpreter {
     var currentName: String?
     var currentValue: String?
-    var mapping: [String: String] = [:]
+    var currentLineNumber: Int = 0
+    var mapping: [String: (String, Int)] = [:]
 
     func next(text: String, lineNumber: Int) throws {
         let unrecognizedException = StageException.UnrecognizedContent(
             message: "Expected a property setter statement on line \(lineNumber)\nsaw '\(text)'",
-            line: lineNumber)
+            line: lineNumber,
+            backtrace: [])
 
         if case let leftTrimmed = text.leftTrimmed() where leftTrimmed.hasPrefix(".") {
             commitCurrent()
@@ -61,6 +63,7 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
             let scannedToIndex = scanner.string.startIndex.advancedBy(scanner.scanLocation)
             currentName = propertyName as? String
             currentValue = leftTrimmed.substringFromIndex(scannedToIndex).trimmed()
+            currentLineNumber = lineNumber
         } else {
             if currentName == nil { throw unrecognizedException }
             currentValue!.appendContentsOf("\n\(text.trimmed())")
@@ -79,9 +82,10 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
             print("Warning. Overriding previously set value for property '\(propertyName)'\n\(mapping[propertyName])\nwith new value:\n\(currentValue!)")
         }
 
-        mapping[propertyName] = String(currentValue!)
+        mapping[propertyName] = (String(currentValue!), currentLineNumber)
         currentName = nil
         currentValue = nil
+        currentLineNumber = 0
     }
 }
 

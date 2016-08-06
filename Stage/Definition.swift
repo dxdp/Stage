@@ -21,9 +21,26 @@
 
 import Foundation
 
+public protocol StageDefinitionErrorListener {
+    func error(exception: StageException)
+}
+
+public protocol StageDefinitionFactory {
+    func build(data data: NSData) throws -> StageDefinition
+    func build(data data: NSData, encoding: NSStringEncoding) throws -> StageDefinition
+    func build(contentsOfFile file: String) throws -> StageDefinition
+    func build(contentsOfFile file: String, encoding: NSStringEncoding) throws -> StageDefinition
+    func use(errorListener: StageDefinitionErrorListener)
+}
+
 public class StageDefinition {
+    let errorListener: StageDefinitionErrorListener?
     var declarations: [String: StageDeclaration] = [:]
     var debugIdentifier = ""
+    init(errorListener: StageDefinitionErrorListener?) {
+        self.errorListener = errorListener
+    }
+
     subscript(name: String) -> StageDeclaration {
         guard let some = declarations[name] else {
             let value = StageDeclaration(name: name)
@@ -35,23 +52,32 @@ public class StageDefinition {
 
     // TODO: Templated data bindings
     public func load<ViewMapping: StageViewMapping>(viewHierarchy name: String, @noescape handler: ViewMapping -> ()) throws -> StageLiveContext {
-        let liveContext = try load(viewHierarchy: name)
-        let mapper = Mapper(context: liveContext)
-        let mapping = try ViewMapping(map: mapper)
-        handler(mapping)
-        return liveContext
+        do {
+            let liveContext = try load(viewHierarchy: name)
+            let mapper = Mapper(context: liveContext)
+            do {
+                let mapping = try ViewMapping(map: mapper)
+                handler(mapping)
+            } catch let ex as StageException {
+                throw ex.withBacktraceMessage("while binding views to native ViewMapping \(ViewMapping.self)")
+            }
+            return liveContext
+        } catch let ex as StageException {
+            errorListener?.error(ex)
+            throw ex
+        }
     }
     public func load(viewHierarchy name: String) throws -> StageLiveContext {
-        guard let declaration = declarations[name] where declaration.viewHierarchy != nil else {
-            throw StageException.UnknownViewHierarchy(message: "Attempt to load unknown view hierarchy: \(name)")
+        do {
+            guard let declaration = declarations[name] where declaration.viewHierarchy != nil else {
+                throw StageException.UnknownViewHierarchy(message: "Attempt to load unknown view hierarchy: \(name)", backtrace: [])
+            }
+            return try StageLiveContext(definition: self, root: declaration)
+        } catch var ex as StageException {
+            ex = ex.withBacktraceMessage("while attempting to load view hierarchy \(name)")
+            if !debugIdentifier.isEmpty { ex = ex.withBacktraceMessage("from StageDefinition: \(debugIdentifier)") }
+            errorListener?.error(ex)
+            throw ex
         }
-        return try StageLiveContext(definition: self, root: declaration)
     }
-}
-
-public protocol StageDefinitionFactory {
-    func build(data data: NSData) throws -> StageDefinition
-    func build(data data: NSData, encoding: NSStringEncoding) throws -> StageDefinition
-    func build(contentsOfFile file: String) throws -> StageDefinition
-    func build(contentsOfFile file: String, encoding: NSStringEncoding) throws -> StageDefinition
 }

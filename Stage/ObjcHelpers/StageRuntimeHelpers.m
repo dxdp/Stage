@@ -22,6 +22,7 @@
 #import "StageRuntimeHelpers.h"
 #import "NSObject+Stage.h"
 #import "objc/runtime.h"
+#import <dlfcn.h>
 
 @implementation NSObject (StageRuntimeHelpers)
 + (nullable id) stagePropertyRegistration { return nil; }
@@ -45,6 +46,20 @@
         current = current.superclass;
     }
     return [chain copy];
+}
+
++ (void)loadReveal {
+#if DEBUG
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+#if TARGET_IPHONE_SIMULATOR
+        (void)dlopen("/Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib", 0x2);
+#else
+        (void)dlopen([(NSString*)[(NSBundle*)[NSBundle mainBundle] pathForResource:@"libReveal" ofType:@"dylib"] cStringUsingEncoding:0x4], 0x2);
+#endif
+        (void)[(NSNotificationCenter*)[NSNotificationCenter defaultCenter] postNotificationName:@"IBARevealRequestStart" object:nil];
+    });
+#endif
 }
 
 @end

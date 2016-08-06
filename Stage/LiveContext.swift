@@ -35,7 +35,7 @@ public class StageLiveContext {
         initialViews?.forEach { name, view in viewBindings[name] = .SpecificView(view: view) }
 
         if rootDefinition.viewHierarchy == nil {
-            throw StageException.UnknownViewHierarchy(message: "Attempt to load unknown view hierarchy: \(root.name)")
+            throw StageException.UnknownViewHierarchy(message: "Attempt to load unknown view hierarchy: \(root.name)", backtrace: [])
         }
         try buildViewBindings()
     }
@@ -60,11 +60,11 @@ public class StageLiveContext {
 
     public func view<T:UIView>(named name: String) throws -> T {
         switch viewBindings[name] {
-        case .SpecificView(let view)? where view is T: return view as! T
+        case .SpecificView(let view as T)?: return view
         case .SpecificView(let view)? where !(view is T):
-            throw StageException.InvalidViewType(message: "Unexpected type \(T.self) for view named \(name). Expecting type \(view.dynamicType)")
+            throw StageException.InvalidViewType(message: "Unexpected type \(T.self) for view named \(name). Expecting type \(view.dynamicType)", backtrace: [])
         default:
-            throw StageException.UnknownView(message: "Unknown view \(name) in view hierarchy")
+            throw StageException.UnknownView(message: "Unknown view \(name) in view hierarchy", backtrace: [])
         }
     }
 
@@ -82,7 +82,7 @@ public class StageLiveContext {
 
             if viewBindings[child.name]?.view != nil { continue }
             let childDefinition = stage.declarations[child.name]
-            let childViewClassName = childDefinition?.propertyMap["class"] ?? "UIView"
+            let childViewClassName = childDefinition?.propertyMap["class"]?.0 ?? "UIView"
             // UIViews are Objective-C, so even public Swift implementations will have a value that can be loaded.
             // As of writing, they can be loaded using a FQN (e.g. MyModule.MyAwesomeView) or via the mangled name.
             var childViewType: AnyClass? = NSClassFromString(childViewClassName)
@@ -149,9 +149,10 @@ public class StageLiveContext {
         }
         let chain = StageRuntimeHelpers.inheritanceChainRegistries(for: view)
         try keys.forEach { key in
-            if let propertyText = declaration.propertyMap[key] {
+            if let (propertyText, startingLine) = declaration.propertyMap[key] {
                 let scanner = StageRuleScanner(string: propertyText)
                 scanner.charactersToBeSkipped = .whitespaceCharacterSet()
+                scanner.startingLine = startingLine
 
                 var handled = false
                 for registration in chain where registration is StagePropertyRegistration && !handled {
@@ -163,8 +164,10 @@ public class StageLiveContext {
                     }
                 }
                 if !handled {
-                    throw StageException.UnhandledProperty(message:
-                        "Property '\(key)' has no setter defined in any superclass of \(view.dynamicType)")
+                    throw StageException.UnhandledProperty(
+                        message: "Property '\(key)' has no setter registered in any superclass of \(view.dynamicType)",
+                        line: startingLine,
+                        backtrace: [])
                 }
             }
         }

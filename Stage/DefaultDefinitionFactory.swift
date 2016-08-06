@@ -36,37 +36,71 @@ class StageDefinitionIndex {
 
 public class DefaultDefinitionFactory : StageDefinitionFactory {
     let index: StageDefinitionIndex
+    var errorListener: StageDefinitionErrorListener?
+
     public init(bundles: [NSBundle] = [.mainBundle()] + NSBundle.allFrameworks()) {
         index = StageDefinitionIndex(bundles: bundles)
     }
     public func build(data data: NSData) throws -> StageDefinition {
-        return try self.build(data: data, encoding: NSUTF8StringEncoding)
+        do {
+            return try self.build(data: data, encoding: NSUTF8StringEncoding)
+        } catch let ex as StageException {
+            errorListener?.error(ex)
+            throw ex
+        }
+
     }
     public func build(contentsOfFile file: String) throws -> StageDefinition {
-        return try self.build(contentsOfFile: file, encoding: NSUTF8StringEncoding)
+        do {
+            return try self.build(contentsOfFile: file, encoding: NSUTF8StringEncoding)
+        } catch let ex as StageException {
+            errorListener?.error(ex)
+            throw ex
+        }
     }
 
     public func build(data data: NSData, encoding: NSStringEncoding) throws -> StageDefinition {
-        guard let string = String(data: data, encoding: encoding) else {
-            throw StageException.InvalidDataEncoding
+        return try build(data: data, encoding: encoding, identifier: "")
+    }
+
+    private func build(data data: NSData, encoding: NSStringEncoding, identifier: String) throws -> StageDefinition {
+        do {
+            guard let string = String(data: data, encoding: encoding) else {
+                throw StageException.InvalidDataEncoding(backtrace: [])
+            }
+            let lines = string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\r\n"))
+            return try StageParser(errorListener: errorListener).parse(lines, identifier: identifier)
+        } catch let ex as StageException {
+            errorListener?.error(ex)
+            throw ex
         }
-        let lines = string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\r\n"))
-        return try StageParser().parse(lines)
+    }
+
+    public func use(errorListener: StageDefinitionErrorListener) {
+        self.errorListener = errorListener
     }
 
     public func build(contentsOfFile file: String, encoding: NSStringEncoding) throws -> StageDefinition {
-        let inputFile = file
-        var file = inputFile
-        if !file.hasPrefix("/") { file = try fullPathInBundle(file) }
-        // TODO: caching of definitions
-        if let data = NSData(contentsOfFile: file) { return try build(data: data, encoding: encoding) }
-        throw StageException.ResourceNotAvailable(name: inputFile,
-                                                  message: "File could not be found in the main or framework bundles")
+        do {
+            let inputFile = file
+            var file = inputFile
+            if !file.hasPrefix("/") { file = try fullPathInBundle(file) }
+            // TODO: caching of definitions
+            if let data = NSData(contentsOfFile: file) { return try build(data: data, encoding: encoding, identifier: file) }
+            throw StageException.ResourceNotAvailable(name: inputFile,
+                                                      message: "File could not be found in the main or framework bundles",
+                                                      backtrace: [])
+        } catch var ex as StageException {
+            ex = ex.withBacktraceMessage("while building StageDefinition from contents of file \(file)")
+            errorListener?.error(ex)
+            throw ex
+        }
     }
 
     func fullPathInBundle(file: String) throws -> String {
         if let str = index.dict[file] { return str }
         throw StageException.ResourceNotAvailable(name: file,
-                                                  message: "File could not be found in the main or framework bundles")
+                                                  message: "File could not be found in the main or framework bundles",
+                                                  backtrace: [])
     }
 }

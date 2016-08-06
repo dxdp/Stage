@@ -22,12 +22,31 @@
 import Foundation
 
 public enum StageException: ErrorType {
-    case InvalidDataEncoding
-    case ResourceNotAvailable(name: String, message: String)
-    case UnrecognizedContent(message: String, line: Int)
-    case UnknownViewHierarchy(message: String)
-    case InvalidViewType(message: String)
-    case UnknownView(message: String)
-    case UnhandledProperty(message: String)
+    case InvalidDataEncoding(backtrace: [String])
+    case InvalidViewType(message: String, backtrace: [String])
+    case ResourceNotAvailable(name: String, message: String, backtrace: [String])
+    case UnhandledProperty(message: String, line: Int, backtrace: [String])
+    case UnknownView(message: String, backtrace: [String])
+    case UnknownViewHierarchy(message: String, backtrace: [String])
+    case UnrecognizedContent(message: String, line: Int, backtrace: [String])
+
+    func withBacktraceMessage(backtraceMessage: String) -> StageException {
+        switch self {
+        case .InvalidDataEncoding(let bt):
+            return .InvalidDataEncoding(backtrace: bt + [backtraceMessage])
+        case .InvalidViewType(let message, let bt):
+            return .InvalidViewType(message: message, backtrace: bt + [backtraceMessage])
+        case .ResourceNotAvailable(let name, let message, let bt):
+            return .ResourceNotAvailable(name: name, message: message, backtrace: bt + [backtraceMessage])
+        case .UnknownView(let message, let bt):
+            return .UnknownView(message: message, backtrace: bt + [backtraceMessage])
+        case .UnknownViewHierarchy(let message, let bt):
+            return .UnknownViewHierarchy(message: message, backtrace: bt + [backtraceMessage])
+        case .UnhandledProperty(let message, let line, let bt):
+            return .UnhandledProperty(message: message, line: line, backtrace: bt + [backtraceMessage])
+        case .UnrecognizedContent(let message, let line, let bt):
+            return .UnrecognizedContent(message: message, line: line, backtrace: bt + [backtraceMessage])
+        }
+    }
 }
 
