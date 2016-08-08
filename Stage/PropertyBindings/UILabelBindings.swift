@@ -24,15 +24,15 @@ import Foundation
 private var propertyTable = {
     return tap(StagePropertyRegistration()) {
         let LongLived = $0
-        $0.register("font") { scanner -> UIFont in try scanner.scanUIFont(defaultPointSize: 14) }
+        $0.register("font") { scanner in try UIFont.create(using: scanner, defaultPointSize: 14) }
             .apply { (view: UILabel, value) in view.font = value }
-        $0.register("lineBreakMode") { scanner -> NSLineBreakMode in try scanner.scanNSLineBreakMode() }
+        $0.register("lineBreakMode") { scanner in try NSLineBreakMode.create(using: scanner) }
             .apply { (view: UILabel, value) in view.lineBreakMode = value }
-        $0.register("numberOfLines") { scanner -> Int in try scanner.scanInt() }
+        $0.register("numberOfLines") { scanner in try scanner.scanInt() }
             .apply { (view: UILabel, value) in view.numberOfLines = value }
-        $0.register("text") { scanner -> String in scanner.string.trimmed() }
+        $0.register("text") { scanner in scanner.string.trimmed() }
             .apply { (view: UILabel, value) in view.text = value }
-        $0.register("textAlignment") { scanner -> NSTextAlignment in try scanner.scanNSTextAlignment() }
+        $0.register("textAlignment") { scanner in try NSTextAlignment.create(using: scanner) }
             .apply { (view: UILabel, value) in
                 guard value == .Justified else {
                     view.textAlignment = value
@@ -47,7 +47,7 @@ private var propertyTable = {
                     view.attributedText = attributedText
                 }
         }
-        $0.register("textColor") { scanner -> UIColor in try scanner.scanUIColor() }
+        $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
             .apply { (view: UILabel, value) in view.textColor = value }
     }
 }()

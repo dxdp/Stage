@@ -1,5 +1,5 @@
 //
-//  UIFontScan.swift
+//  CGSizeScan.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -21,24 +21,15 @@
 
 import Foundation
 
-public extension UIFont {
-    public static func create(using scanner: StageRuleScanner, defaultPointSize: CGFloat) throws -> UIFont {
-        let needSize: Bool
-        var finalSize: CGFloat = defaultPointSize
-        if let size = try? scanner.scanNSNumber() {
-            needSize = false
-            finalSize = CGFloat(size.floatValue)
-        } else {
-            needSize = true
+public extension CGSize {
+    public static func create(using scanner: StageRuleScanner) throws -> CGSize {
+        let dims = try scanner.scanBracedList(open: "{", close: "}", itemScan: scanner.scanCGFloat())
+        guard dims.count == 2 else {
+            throw StageException.UnrecognizedContent(
+                message: "Expected size to be in format: {width, height}, but saw \(scanner.string)",
+                line: scanner.startingLine,
+                backtrace: [])
         }
-        let name = try scanner.scanUpToCharactersFromSet(.whitespaceCharacterSet())
-        if needSize {
-            finalSize = CGFloat((try? scanner.scanNSNumber())?.floatValue ?? defaultPointSize)
-        }
-        if let font = UIFont(name: name, size: finalSize) { return font }
-        throw StageException.UnrecognizedContent(
-            message: "Unable to create font for name: \(name) size: \(finalSize)",
-            line: scanner.startingLine,
-            backtrace: [])
+        return CGSizeMake(dims[0], dims[1])
     }
 }

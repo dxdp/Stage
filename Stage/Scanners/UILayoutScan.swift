@@ -81,12 +81,12 @@ public extension StageRuleScanner {
             let addendText          = captureGroup(8)
 
             func scanner(text: String) -> StageRuleScanner { return StageRuleScanner(string: text) }
-            func selfAttribute() throws -> NSLayoutAttribute { return try scanner(selfAttributeText).scanNSLayoutAttribute() }
-            func relation() throws -> NSLayoutRelation { return try scanner(relationText).scanNSLayoutRelation() }
+            func selfAttribute() throws -> NSLayoutAttribute { return try NSLayoutAttribute.create(using: scanner(selfAttributeText)) }
+            func relation() throws -> NSLayoutRelation { return try NSLayoutRelation.create(using: scanner(relationText)) }
             func targetAttribute() throws -> NSLayoutAttribute {
                 switch (targetText, targetAttributeText) {
                 case (let x, let y) where x == nil && y == nil: return .NotAnAttribute
-                case (let x, let y) where x != nil && y != nil: return try scanner(targetAttributeText!).scanNSLayoutAttribute()
+                case (let x, let y) where x != nil && y != nil: return try NSLayoutAttribute.create(using: scanner(targetAttributeText!))
                 default: throw StageException.UnrecognizedContent(
                     message: "Failed to parse target and attribute",
                     line: currentLine,

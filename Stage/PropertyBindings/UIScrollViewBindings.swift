@@ -23,33 +23,33 @@ import Foundation
 
 private var propertyTable = {
     return tap(StagePropertyRegistration()) {
-        $0.register("alwaysBounceHorizontal") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("alwaysBounceHorizontal") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.alwaysBounceHorizontal = value }
-        $0.register("alwaysBounceVertical") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("alwaysBounceVertical") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.alwaysBounceVertical = value }
-        $0.register("bounces") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("bounces") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.bounces = value }
-        $0.register("bouncesZoom") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("bouncesZoom") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.bouncesZoom = value }
 
-        $0.register("minimumZoomScale") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("minimumZoomScale") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIScrollView, value) in view.minimumZoomScale = value }
-        $0.register("maximumZoomScale") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("maximumZoomScale") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIScrollView, value) in view.maximumZoomScale = value }
-        $0.register("zoomScale") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("zoomScale") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIScrollView, value) in view.zoomScale = value }
 
-        $0.register("pagingEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("pagingEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.pagingEnabled = value }
-        $0.register("scrollEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("scrollEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.scrollEnabled = value }
 
-        $0.register("scrollsToTop") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("scrollsToTop") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.scrollsToTop = value }
 
-        $0.register("showsHorizontalScrollIndicator") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("showsHorizontalScrollIndicator") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.showsHorizontalScrollIndicator = value }
-        $0.register("showsVerticalScrollIndicator") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("showsVerticalScrollIndicator") { scanner in try scanner.scanBool() }
             .apply { (view: UIScrollView, value) in view.showsVerticalScrollIndicator = value }
 
     }

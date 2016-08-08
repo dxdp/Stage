@@ -398,6 +398,9 @@ public enum WebColors: String {
     }
 }
 public extension UIColor {
+    public static func create(using scanner: StageRuleScanner) throws -> UIColor {
+        return try scanner.scanUIColor()
+    }
     convenience init(webHex string: String) throws {
         var string = string
         if string.hasPrefix("#") { string.removeAtIndex(string.startIndex) }

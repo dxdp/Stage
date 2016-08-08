@@ -23,64 +23,64 @@ import Foundation
 
 private var UIView_propertyTable = {
     return tap(StagePropertyRegistration()) {
-        $0.register("alpha") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("alpha") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIView, value) in view.alpha = min(max(value, 0), 1) }
 
-        $0.register("backgroundColor") { scanner -> UIColor in try scanner.scanUIColor() }
+        $0.register("backgroundColor") { scanner in try UIColor.create(using: scanner) }
             .apply { (view: UIView, value) in view.backgroundColor = value }
 
-        $0.register("borderColor") { scanner -> UIColor in try scanner.scanUIColor() }
+        $0.register("borderColor") { scanner in try UIColor.create(using: scanner) }
             .apply { (view: UIView, value) in view.layer.borderColor = value.CGColor }
-        $0.register("borderRadius") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("borderRadius") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIView, value) in view.layer.cornerRadius = value }
-        $0.register("borderWidth") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("borderWidth") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIView, value) in view.layer.borderWidth = value }
 
-        $0.register("clipsToBounds") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("clipsToBounds") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.clipsToBounds = value }
-        $0.register("contentMode") { scanner -> UIViewContentMode in try scanner.scanUIViewContentMode() }
+        $0.register("contentMode") { scanner in try UIViewContentMode.create(using: scanner) }
             .apply { (view: UIView, value) in view.contentMode = value }
 
-        $0.register("hidden") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("hidden") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.hidden = value }
 
-        $0.register("masksToBounds") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("masksToBounds") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.layer.masksToBounds = value }
 
-        $0.register("opacity") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("opacity") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIView, value) in view.alpha = min(max(value, 0), 1) }
-        $0.register("opaque") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("opaque") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.opaque = value }
 
-        $0.register("shadowColor") { scanner -> UIColor in try scanner.scanUIColor() }
+        $0.register("shadowColor") { scanner in try UIColor.create(using: scanner) }
             .apply { (view: UIView, value) in view.layer.shadowColor = value.CGColor }
-        $0.register("shadowOffset") { scanner -> CGSize in try scanner.scanCGSize() }
+        $0.register("shadowOffset") { scanner in try CGSize.create(using: scanner) }
             .apply { (view: UIView, value) in view.layer.shadowOffset = value }
-        $0.register("shadowOpacity") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("shadowOpacity") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIView, value) in view.stage_setShadowOpacity(value) }
-        $0.register("shadowRadius") { scanner -> CGFloat in try scanner.scanCGFloat() }
+        $0.register("shadowRadius") { scanner in try scanner.scanCGFloat() }
             .apply { (view: UIView, value) in view.stage_setShadowRadius(value) }
 
-        $0.register("tintColor") { scanner -> UIColor in try scanner.scanUIColor() }
+        $0.register("tintColor") { scanner in try UIColor.create(using: scanner) }
             .apply { (view: UIView, value) in view.tintColor = value }
 
-        $0.register("userInteractionEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("userInteractionEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.hidden = value }
 
         // Layout properties
-        $0.register("autoresize") { scanner -> UIViewAutoresizing in try scanner.scanUIViewAutoresizing() }
+        $0.register("autoresize") { scanner in try UIViewAutoresizing.create(using: scanner) }
             .apply { (view: UIView, value) in view.autoresizingMask = value }
 
-        $0.register("constrainToSuperviewEdges") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("constrainToSuperviewEdges") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = false }
             .apply { (view: UIView, value, context) in if (value) { view.constrainToSuperviewEdges() } }
 
-        $0.register("horizontalCompressionResistance") { scanner -> UILayoutPriority in try scanner.scanFloat() }
+        $0.register("horizontalCompressionResistance") { scanner in try scanner.scanFloat() }
             .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis:.Vertical) }
-        $0.register("horizontalContentHuggingPriority") { scanner -> UILayoutPriority in try scanner.scanFloat() }
+        $0.register("horizontalContentHuggingPriority") { scanner in try scanner.scanFloat() }
             .apply { (view: UIView, value) in view.setContentHuggingPriority(value, forAxis:.Horizontal) }
 
-        $0.register("layoutAttributes") { scanner -> [StageLayoutConstraint] in try scanner.scanStageLayoutConstraints() }
+        $0.register("layoutAttributes") { scanner in try scanner.scanStageLayoutConstraints() }
             .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = false }
             .apply { (view: UIView, value, context) in
                 let autoLayoutConstraints = value.flatMap { constraint -> NSLayoutConstraint? in
@@ -110,12 +110,12 @@ private var UIView_propertyTable = {
                 NSLayoutConstraint.activateConstraints(autoLayoutConstraints)
         }
 
-        $0.register("translatesAutoresizingMaskIntoConstraints") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("translatesAutoresizingMaskIntoConstraints") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = value }
 
-        $0.register("verticalCompressionResistance") { scanner -> UILayoutPriority in try scanner.scanFloat() }
+        $0.register("verticalCompressionResistance") { scanner in try scanner.scanFloat() }
             .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis:.Vertical) }
-        $0.register("verticalContentHuggingPriority") { scanner -> UILayoutPriority in try scanner.scanFloat() }
+        $0.register("verticalContentHuggingPriority") { scanner in try scanner.scanFloat() }
             .apply { (view: UIView, value) in view.setContentHuggingPriority(value, forAxis:.Horizontal) }
     }
 }()

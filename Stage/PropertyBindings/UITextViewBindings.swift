@@ -23,22 +23,22 @@ import Foundation
 
 private var propertyTable = {
     return tap(StagePropertyRegistration()) {
-        $0.register("font") { scanner -> UIFont in try scanner.scanUIFont(defaultPointSize: 14) }
+        $0.register("font") { scanner in try UIFont.create(using: scanner, defaultPointSize: 14) }
             .apply { (view: UITextView, value) in view.font = value }
 
-        $0.register("keyboardType") { scanner -> UIKeyboardType in try scanner.scanUIKeyboardType() }
+        $0.register("keyboardType") { scanner in try UIKeyboardType.create(using: scanner) }
             .apply { (view: UITextView, value) in view.keyboardType = value }
 
-        $0.register("text") { scanner -> String in scanner.scanLinesTrimmed().joinWithSeparator("\n") }
+        $0.register("text") { scanner in scanner.scanLinesTrimmed().joinWithSeparator("\n") }
             .apply { (view: UITextView, value) in view.text = value }
-        $0.register("textAlignment") { scanner -> NSTextAlignment in try scanner.scanNSTextAlignment() }
+        $0.register("textAlignment") { scanner in try NSTextAlignment.create(using: scanner) }
             .apply { (view: UITextView, value) in view.textAlignment = value }
-        $0.register("textColor") { scanner -> UIColor in try scanner.scanUIColor() }
+        $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
             .apply { (view: UITextView, value) in view.textColor = value }
-        $0.register("textContainerInset") { scanner -> UIEdgeInsets in try scanner.scanUIEdgeInsets() }
+        $0.register("textContainerInset") { scanner in try UIEdgeInsets.create(using: scanner) }
             .apply { (view: UITextView, value) in view.textContainerInset = value }
 
-        $0.register("inputAccessoryView") { scanner -> String in scanner.string.trimmed() }
+        $0.register("inputAccessoryView") { scanner in scanner.string.trimmed() }
             .apply { (view: UITextView, value, context) in
                 guard let accessoryView = try? context.view(named: value) else {
                     print("Warning. inputAccessoryView '\(value)' for UITextView not present in the StageLiveContext")

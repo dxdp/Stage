@@ -24,23 +24,23 @@ import MapKit
 
 private var propertyTable = {
     return tap(StagePropertyRegistration()) {
-        $0.register("pitchEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("pitchEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.pitchEnabled = value }
-        $0.register("rotateEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("rotateEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.rotateEnabled = value }
-        $0.register("scrollEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("scrollEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.scrollEnabled = value }
-        $0.register("zoomEnabled") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("zoomEnabled") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.zoomEnabled = value }
 
-        $0.register("showsPointsOfInterest") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("showsPointsOfInterest") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.showsPointsOfInterest = value }
-        $0.register("showsBuildings") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("showsBuildings") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.showsBuildings = value }
-        $0.register("showsUserLocation") { scanner -> Bool in try scanner.scanBool() }
+        $0.register("showsUserLocation") { scanner in try scanner.scanBool() }
             .apply { (view: MKMapView, value) in view.showsUserLocation = value }
 
-        $0.register("mapType") { scanner -> MKMapType in try scanner.scanMKMapType() }
+        $0.register("mapType") { scanner in try MKMapType.create(using: scanner) }
             .apply { (view: MKMapView, value) in view.mapType = value }
     }
 }()

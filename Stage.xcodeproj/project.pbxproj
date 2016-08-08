@@ -34,14 +34,24 @@
 		044898C91D4FCD330026F43A /* EnumScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898A81D4FCD330026F43A /* EnumScanner.swift */; };
 		044898CA1D4FCD330026F43A /* RuleScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898A91D4FCD330026F43A /* RuleScanner.swift */; };
 		044898CB1D4FCD330026F43A /* UIColorScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898AA1D4FCD330026F43A /* UIColorScan.swift */; };
-		044898CC1D4FCD330026F43A /* UIEnumScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898AB1D4FCD330026F43A /* UIEnumScan.swift */; };
 		044898CD1D4FCD330026F43A /* UIFontScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898AC1D4FCD330026F43A /* UIFontScan.swift */; };
 		044898CE1D4FCD330026F43A /* UILayoutScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898AD1D4FCD330026F43A /* UILayoutScan.swift */; };
-		044898CF1D4FCD330026F43A /* UIStructuresScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898AE1D4FCD330026F43A /* UIStructuresScan.swift */; };
 		044898D01D4FCD330026F43A /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898AF1D4FCD330026F43A /* Utilities.swift */; };
 		044898D11D4FCD330026F43A /* ViewBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898B01D4FCD330026F43A /* ViewBinding.swift */; };
 		044898D21D4FCD330026F43A /* ViewHierarchyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898B11D4FCD330026F43A /* ViewHierarchyNode.swift */; };
 		044898D61D4FCEA80026F43A /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044898D51D4FCEA80026F43A /* Parser.swift */; };
+		0456F1B91D590BCC005F8326 /* CGPointScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1B81D590BCC005F8326 /* CGPointScan.swift */; };
+		0456F1BB1D590BF4005F8326 /* CGSizeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1BA1D590BF4005F8326 /* CGSizeScan.swift */; };
+		0456F1BD1D590C35005F8326 /* UIEdgeInsetsScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1BC1D590C35005F8326 /* UIEdgeInsetsScan.swift */; };
+		0456F1BF1D590D5A005F8326 /* MKMapTypeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1BE1D590D5A005F8326 /* MKMapTypeScan.swift */; };
+		0456F1C11D590DC6005F8326 /* NSLayoutScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1C01D590DC6005F8326 /* NSLayoutScan.swift */; };
+		0456F1C31D590E95005F8326 /* NSLineBreakModeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1C21D590E95005F8326 /* NSLineBreakModeScan.swift */; };
+		0456F1C51D590EC1005F8326 /* NSTextAlignmentScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1C41D590EC1005F8326 /* NSTextAlignmentScan.swift */; };
+		0456F1C71D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1C61D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift */; };
+		0456F1C91D590F72005F8326 /* UIBlurEffectStyleScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1C81D590F72005F8326 /* UIBlurEffectStyleScan.swift */; };
+		0456F1CB1D590FB6005F8326 /* UIKeyboardTypeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */; };
+		0456F1CD1D59100D005F8326 /* UIViewScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CC1D59100D005F8326 /* UIViewScan.swift */; };
+		0456F1CF1D591087005F8326 /* UITextFieldViewModeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */; };
 		04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */; };
 		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
 		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
@@ -78,14 +88,24 @@
 		044898A81D4FCD330026F43A /* EnumScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumScanner.swift; sourceTree = "<group>"; };
 		044898A91D4FCD330026F43A /* RuleScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleScanner.swift; sourceTree = "<group>"; };
 		044898AA1D4FCD330026F43A /* UIColorScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorScan.swift; sourceTree = "<group>"; };
-		044898AB1D4FCD330026F43A /* UIEnumScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEnumScan.swift; sourceTree = "<group>"; };
 		044898AC1D4FCD330026F43A /* UIFontScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontScan.swift; sourceTree = "<group>"; };
 		044898AD1D4FCD330026F43A /* UILayoutScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILayoutScan.swift; sourceTree = "<group>"; };
-		044898AE1D4FCD330026F43A /* UIStructuresScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIStructuresScan.swift; sourceTree = "<group>"; };
 		044898AF1D4FCD330026F43A /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		044898B01D4FCD330026F43A /* ViewBinding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewBinding.swift; sourceTree = "<group>"; };
 		044898B11D4FCD330026F43A /* ViewHierarchyNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewHierarchyNode.swift; sourceTree = "<group>"; };
 		044898D51D4FCEA80026F43A /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		0456F1B81D590BCC005F8326 /* CGPointScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointScan.swift; sourceTree = "<group>"; };
+		0456F1BA1D590BF4005F8326 /* CGSizeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGSizeScan.swift; sourceTree = "<group>"; };
+		0456F1BC1D590C35005F8326 /* UIEdgeInsetsScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsetsScan.swift; sourceTree = "<group>"; };
+		0456F1BE1D590D5A005F8326 /* MKMapTypeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKMapTypeScan.swift; sourceTree = "<group>"; };
+		0456F1C01D590DC6005F8326 /* NSLayoutScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLayoutScan.swift; sourceTree = "<group>"; };
+		0456F1C21D590E95005F8326 /* NSLineBreakModeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLineBreakModeScan.swift; sourceTree = "<group>"; };
+		0456F1C41D590EC1005F8326 /* NSTextAlignmentScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSTextAlignmentScan.swift; sourceTree = "<group>"; };
+		0456F1C61D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIActivityIndicatorViewStyleScan.swift; sourceTree = "<group>"; };
+		0456F1C81D590F72005F8326 /* UIBlurEffectStyleScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBlurEffectStyleScan.swift; sourceTree = "<group>"; };
+		0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKeyboardTypeScan.swift; sourceTree = "<group>"; };
+		0456F1CC1D59100D005F8326 /* UIViewScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewScan.swift; sourceTree = "<group>"; };
+		0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldViewModeScan.swift; sourceTree = "<group>"; };
 		04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorConsole.swift; sourceTree = "<group>"; };
 		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
@@ -178,13 +198,23 @@
 		044898A71D4FCD330026F43A /* Scanners */ = {
 			isa = PBXGroup;
 			children = (
+				0456F1B81D590BCC005F8326 /* CGPointScan.swift */,
+				0456F1BA1D590BF4005F8326 /* CGSizeScan.swift */,
 				044898A81D4FCD330026F43A /* EnumScanner.swift */,
+				0456F1BE1D590D5A005F8326 /* MKMapTypeScan.swift */,
+				0456F1C01D590DC6005F8326 /* NSLayoutScan.swift */,
+				0456F1C21D590E95005F8326 /* NSLineBreakModeScan.swift */,
+				0456F1C41D590EC1005F8326 /* NSTextAlignmentScan.swift */,
 				044898A91D4FCD330026F43A /* RuleScanner.swift */,
+				0456F1C61D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift */,
+				0456F1C81D590F72005F8326 /* UIBlurEffectStyleScan.swift */,
 				044898AA1D4FCD330026F43A /* UIColorScan.swift */,
-				044898AB1D4FCD330026F43A /* UIEnumScan.swift */,
+				0456F1BC1D590C35005F8326 /* UIEdgeInsetsScan.swift */,
 				044898AC1D4FCD330026F43A /* UIFontScan.swift */,
+				0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */,
 				044898AD1D4FCD330026F43A /* UILayoutScan.swift */,
-				044898AE1D4FCD330026F43A /* UIStructuresScan.swift */,
+				0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */,
+				0456F1CC1D59100D005F8326 /* UIViewScan.swift */,
 			);
 			path = Scanners;
 			sourceTree = "<group>";
@@ -289,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D3B64F1D52B244002800F0 /* UIView.swift in Sources */,
+				0456F1BB1D590BF4005F8326 /* CGSizeScan.swift in Sources */,
 				044898C71D4FCD330026F43A /* UIViewBindings.swift in Sources */,
 				044898B21D4FCD330026F43A /* Declaration.swift in Sources */,
 				044898D61D4FCEA80026F43A /* Parser.swift in Sources */,
@@ -298,29 +329,38 @@
 				044898B71D4FCD330026F43A /* LiveContext.swift in Sources */,
 				044898CD1D4FCD330026F43A /* UIFontScan.swift in Sources */,
 				044898C41D4FCD330026F43A /* UISegmentedControlBindings.swift in Sources */,
+				0456F1BF1D590D5A005F8326 /* MKMapTypeScan.swift in Sources */,
 				044898BA1D4FCD330026F43A /* NSObject+Stage.m in Sources */,
+				0456F1C71D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift in Sources */,
 				044898C11D4FCD330026F43A /* MKMapViewBindings.swift in Sources */,
 				044898B81D4FCD330026F43A /* Mapper.swift in Sources */,
 				044898C21D4FCD330026F43A /* UILabelBindings.swift in Sources */,
 				044898D21D4FCD330026F43A /* ViewHierarchyNode.swift in Sources */,
-				044898CC1D4FCD330026F43A /* UIEnumScan.swift in Sources */,
 				044898C51D4FCD330026F43A /* UITextFieldBindings.swift in Sources */,
+				0456F1B91D590BCC005F8326 /* CGPointScan.swift in Sources */,
 				044898B61D4FCD330026F43A /* Exception.swift in Sources */,
+				0456F1BD1D590C35005F8326 /* UIEdgeInsetsScan.swift in Sources */,
 				044898CA1D4FCD330026F43A /* RuleScanner.swift in Sources */,
 				044898D01D4FCD330026F43A /* Utilities.swift in Sources */,
 				044898C61D4FCD330026F43A /* UITextViewBindings.swift in Sources */,
 				044898C81D4FCD330026F43A /* PropertyRegistration.swift in Sources */,
 				044898D11D4FCD330026F43A /* ViewBinding.swift in Sources */,
+				0456F1C91D590F72005F8326 /* UIBlurEffectStyleScan.swift in Sources */,
+				0456F1CD1D59100D005F8326 /* UIViewScan.swift in Sources */,
 				044898CE1D4FCD330026F43A /* UILayoutScan.swift in Sources */,
+				0456F1CF1D591087005F8326 /* UITextFieldViewModeScan.swift in Sources */,
 				044898C31D4FCD330026F43A /* UIScrollViewBindings.swift in Sources */,
 				044898CB1D4FCD330026F43A /* UIColorScan.swift in Sources */,
+				0456F1C51D590EC1005F8326 /* NSTextAlignmentScan.swift in Sources */,
+				0456F1CB1D590FB6005F8326 /* UIKeyboardTypeScan.swift in Sources */,
+				0456F1C11D590DC6005F8326 /* NSLayoutScan.swift in Sources */,
 				044898C91D4FCD330026F43A /* EnumScanner.swift in Sources */,
 				044898BE1D4FCD330026F43A /* StageSafeKVO.m in Sources */,
 				04D3B6561D53B7D4002800F0 /* StackingViewBindings.swift in Sources */,
+				0456F1C31D590E95005F8326 /* NSLineBreakModeScan.swift in Sources */,
 				044898B41D4FCD330026F43A /* Definition.swift in Sources */,
 				04D3B6541D52B420002800F0 /* StackingView.swift in Sources */,
 				044898B51D4FCD330026F43A /* DevelopmentServerDefinitionFactory.swift in Sources */,
-				044898CF1D4FCD330026F43A /* UIStructuresScan.swift in Sources */,
 				044898B31D4FCD330026F43A /* DefaultDefinitionFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -23,7 +23,7 @@ import Foundation
 
 private var propertyTable = {
     return tap(StagePropertyRegistration()) {
-        $0.register("items") { scanner -> [String] in try scanner.scanList(scanner.scanUpToString(",")) }
+        $0.register("items") { scanner in try scanner.scanList(scanner.scanUpToString(",")) }
             .apply { (view: UISegmentedControl, value) in
                 view.removeAllSegments()
                 value.forEach { segmentText in

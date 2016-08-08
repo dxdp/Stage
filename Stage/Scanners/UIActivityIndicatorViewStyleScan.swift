@@ -1,5 +1,5 @@
 //
-//  UIFontScan.swift
+//  UIActivityIndicatorViewStyleScan.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -21,24 +21,13 @@
 
 import Foundation
 
-public extension UIFont {
-    public static func create(using scanner: StageRuleScanner, defaultPointSize: CGFloat) throws -> UIFont {
-        let needSize: Bool
-        var finalSize: CGFloat = defaultPointSize
-        if let size = try? scanner.scanNSNumber() {
-            needSize = false
-            finalSize = CGFloat(size.floatValue)
-        } else {
-            needSize = true
-        }
-        let name = try scanner.scanUpToCharactersFromSet(.whitespaceCharacterSet())
-        if needSize {
-            finalSize = CGFloat((try? scanner.scanNSNumber())?.floatValue ?? defaultPointSize)
-        }
-        if let font = UIFont(name: name, size: finalSize) { return font }
-        throw StageException.UnrecognizedContent(
-            message: "Unable to create font for name: \(name) size: \(finalSize)",
-            line: scanner.startingLine,
-            backtrace: [])
+public extension UIActivityIndicatorViewStyle {
+    private static let nameMap : [String: UIActivityIndicatorViewStyle] = {
+        [ "white": .White,
+          "whitelarge": .WhiteLarge,
+          "gray": .Gray ]
+    }()
+    public static func create(using scanner: StageRuleScanner) throws -> UIActivityIndicatorViewStyle {
+        return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
     }
 }

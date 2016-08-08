@@ -1,5 +1,5 @@
 //
-//  UIFontScan.swift
+//  MKMapTypeScan.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -20,25 +20,15 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import MapKit
 
-public extension UIFont {
-    public static func create(using scanner: StageRuleScanner, defaultPointSize: CGFloat) throws -> UIFont {
-        let needSize: Bool
-        var finalSize: CGFloat = defaultPointSize
-        if let size = try? scanner.scanNSNumber() {
-            needSize = false
-            finalSize = CGFloat(size.floatValue)
-        } else {
-            needSize = true
-        }
-        let name = try scanner.scanUpToCharactersFromSet(.whitespaceCharacterSet())
-        if needSize {
-            finalSize = CGFloat((try? scanner.scanNSNumber())?.floatValue ?? defaultPointSize)
-        }
-        if let font = UIFont(name: name, size: finalSize) { return font }
-        throw StageException.UnrecognizedContent(
-            message: "Unable to create font for name: \(name) size: \(finalSize)",
-            line: scanner.startingLine,
-            backtrace: [])
+public extension MKMapType {
+    private static let nameMap: [String: MKMapType] = {
+        [ "standard": .Standard,
+          "satellite": .Satellite,
+          "hybrid": .Hybrid ]
+    }()
+    public static func create(using scanner: StageRuleScanner) throws -> MKMapType {
+        return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
     }
 }
