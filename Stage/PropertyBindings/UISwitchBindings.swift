@@ -48,12 +48,12 @@ private var propertyTable = {
         $0.register("offImage") { scanner in scanner.string.trimmed() }
             .apply { (view: UISwitch, value) in
                 guard let url = NSURL(string: value) else {
-                    view.onImage = UIImage(named: value)
+                    view.offImage = UIImage(named: value)
                     return
                 }
                 let task = NSURLSession.sharedSession().dataTaskWithRequest(NSURLRequest(URL: url)) { [weak view] data, response, error in
                     if let data = data {
-                        view?.onImage = UIImage(data: data, scale: 0)
+                        view?.offImage = UIImage(data: data, scale: 0)
                     }
                 }
                 task.resume()
