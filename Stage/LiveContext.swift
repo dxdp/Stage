@@ -69,40 +69,44 @@ public class StageLiveContext {
     }
 
     private func buildViewBindings() throws {
-        let root = rootDefinition.viewHierarchy!
-        viewBindings[root.name] = .ContainerSurrogate
-        viewBindings[rootDefinition.name] = .ContainerSurrogate
+        do {
+            let root = rootDefinition.viewHierarchy!
+            viewBindings[root.name] = .ContainerSurrogate
+            viewBindings[rootDefinition.name] = .ContainerSurrogate
 
-        childQueue.removeAll()
-        childQueue.appendContentsOf(root.children)
-        var i = 0; while i < childQueue.count {
-            let child = childQueue[i]
-            childQueue.appendContentsOf(child.children)
-            i += 1
+            childQueue.removeAll()
+            childQueue.appendContentsOf(root.children)
+            var i = 0; while i < childQueue.count {
+                let child = childQueue[i]
+                childQueue.appendContentsOf(child.children)
+                i += 1
 
-            if viewBindings[child.name]?.view != nil { continue }
-            let childDefinition = stage.declarations[child.name]
-            let childViewClassName = childDefinition?.propertyMap["class"]?.0 ?? "UIView"
-            // UIViews are Objective-C, so even public Swift implementations will have a value that can be loaded.
-            // As of writing, they can be loaded using a FQN (e.g. MyModule.MyAwesomeView) or via the mangled name.
-            var childViewType: AnyClass? = NSClassFromString(childViewClassName)
-            if childViewType == nil {
-                print("Warning. Unable to use class \(childViewClassName) while building view hierarchy. Using UIView")
-                childViewType = UIView.self
+                if viewBindings[child.name]?.view != nil { continue }
+                let childDefinition = stage.declarations[child.name]
+                let childViewClassName = childDefinition?.propertyMap["class"]?.0 ?? "UIView"
+                // UIViews are Objective-C, so even public Swift implementations will have a value that can be loaded.
+                // As of writing, they can be loaded using a FQN (e.g. MyModule.MyAwesomeView) or via the mangled name.
+                var childViewType: AnyClass? = NSClassFromString(childViewClassName)
+                if childViewType == nil {
+                    print("Warning. Unable to use class \(childViewClassName) while building view hierarchy. Using UIView")
+                    childViewType = UIView.self
+                }
+
+                if !childViewType!.isSubclassOfClass(UIView.self) {
+                    print("Error. Stage can only build types descending from UIView.",
+                          "Refusing to build instance of \(childViewType!)")
+                    continue
+                }
+
+                if let childView = StageRuntimeHelpers.makeViewWithClass(childViewType!) {
+                    viewBindings[child.name] = .SpecificView(view: childView)
+                }
             }
 
-            if !childViewType!.isSubclassOfClass(UIView.self) {
-                print("Error. Stage can only build types descending from UIView.",
-                      "Refusing to build instance of \(childViewType!)")
-                continue
-            }
-
-            if let childView = StageRuntimeHelpers.makeViewWithClass(childViewType!) {
-                viewBindings[child.name] = .SpecificView(view: childView)
-            }
+            try setProperties(.ViewConstruction)
+        } catch let ex as StageException {
+            throw ex.withBacktraceMessage("while building views")
         }
-
-        try setProperties(.ViewConstruction)
     }
 
     private func buildAncestory() throws {
@@ -167,7 +171,7 @@ public class StageLiveContext {
                     throw StageException.UnhandledProperty(
                         message: "Property '\(key)' has no setter registered in any superclass of \(view.dynamicType)",
                         line: startingLine,
-                        backtrace: [])
+                        backtrace: ["while setting properties for \(declaration.name)"])
                 }
             }
         }

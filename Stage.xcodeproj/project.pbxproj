@@ -52,6 +52,7 @@
 		0456F1CB1D590FB6005F8326 /* UIKeyboardTypeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */; };
 		0456F1CD1D59100D005F8326 /* UIViewScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CC1D59100D005F8326 /* UIViewScan.swift */; };
 		0456F1CF1D591087005F8326 /* UITextFieldViewModeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */; };
+		0456F1D11D59539B005F8326 /* UISwitchBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D01D59539B005F8326 /* UISwitchBindings.swift */; };
 		04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */; };
 		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
 		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
@@ -106,6 +107,7 @@
 		0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKeyboardTypeScan.swift; sourceTree = "<group>"; };
 		0456F1CC1D59100D005F8326 /* UIViewScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewScan.swift; sourceTree = "<group>"; };
 		0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldViewModeScan.swift; sourceTree = "<group>"; };
+		0456F1D01D59539B005F8326 /* UISwitchBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISwitchBindings.swift; sourceTree = "<group>"; };
 		04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorConsole.swift; sourceTree = "<group>"; };
 		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				044898A31D4FCD330026F43A /* UITextFieldBindings.swift */,
 				044898A41D4FCD330026F43A /* UITextViewBindings.swift */,
 				044898A51D4FCD330026F43A /* UIViewBindings.swift */,
+				0456F1D01D59539B005F8326 /* UISwitchBindings.swift */,
 			);
 			path = PropertyBindings;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				0456F1CF1D591087005F8326 /* UITextFieldViewModeScan.swift in Sources */,
 				044898C31D4FCD330026F43A /* UIScrollViewBindings.swift in Sources */,
 				044898CB1D4FCD330026F43A /* UIColorScan.swift in Sources */,
+				0456F1D11D59539B005F8326 /* UISwitchBindings.swift in Sources */,
 				0456F1C51D590EC1005F8326 /* NSTextAlignmentScan.swift in Sources */,
 				0456F1CB1D590FB6005F8326 /* UIKeyboardTypeScan.swift in Sources */,
 				0456F1C11D590DC6005F8326 /* NSLayoutScan.swift in Sources */,
