@@ -181,8 +181,6 @@ let errorConsoleDefinition: String = { [
     "  .textColor = #660000",
     "  .layoutAttributes =",
     "",
-    "#----------------------",
-    "",
     "MessageViewHierarchy:",
     "  Message",
     "",

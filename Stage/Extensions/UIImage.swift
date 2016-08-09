@@ -1,5 +1,5 @@
 //
-//  NSObject+Stage.h
+//  UIImage.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,19 +19,30 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-typedef void (^VoidBlock)(void);
-typedef NS_ENUM(NSUInteger, StageAssociationPolicy) {
-    Assign = 0,
-    RetainNonatomic = 1,
-    CopyNonatomic = 3,
-    RetainAtomic = 01401,
-    CopyAtomic = 01403
-};
+public extension UIImage {
+    public convenience init(color: UIColor, size: CGSize) {
+        UIGraphicsBeginImageContext(size)
+        color.setFill()
+        CGContextFillRect(UIGraphicsGetCurrentContext(), CGRect(origin: .zero, size: size))
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        // Note we can safely unwrap the CGImage, because we are initializing with core graphics
+        self.init(CGImage: image.CGImage!)
+    }
 
-@interface NSObject (Stage)
-- (void)stage_onDeallocExecuteBlock:(nonnull VoidBlock)block NS_SWIFT_NAME(onDeallocation(_:));
-- (void)associateObject:(nullable id)object key:(nonnull void*)key policy:(StageAssociationPolicy)policy;
-- (nullable id)associatedObjectWithKey:(nonnull void*)key NS_SWIFT_NAME(associatedObject(key:));
-@end
+    public func copyWithTint(color: UIColor) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        let context = UIGraphicsGetCurrentContext()
+
+        drawAtPoint(.zero, blendMode: .Normal, alpha: 1)
+        color.setFill()
+        CGContextSetBlendMode(context, .SourceIn);
+        CGContextSetAlpha(context, 1.0);
+        CGContextFillRect(context, CGRect(origin: .zero, size: size))
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return tintedImage;
+    }
+}

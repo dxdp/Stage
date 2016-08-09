@@ -53,6 +53,10 @@
 		0456F1CD1D59100D005F8326 /* UIViewScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CC1D59100D005F8326 /* UIViewScan.swift */; };
 		0456F1CF1D591087005F8326 /* UITextFieldViewModeScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */; };
 		0456F1D11D59539B005F8326 /* UISwitchBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D01D59539B005F8326 /* UISwitchBindings.swift */; };
+		0456F1D51D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */; };
+		0456F1D71D5A523C005F8326 /* UIButtonBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */; };
+		0456F1D91D5A5F69005F8326 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D81D5A5F69005F8326 /* UIImage.swift */; };
+		0456F1DB1D5A7E8A005F8326 /* UIControlAlignmentScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1DA1D5A7E8A005F8326 /* UIControlAlignmentScan.swift */; };
 		04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */; };
 		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
 		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
@@ -108,6 +112,10 @@
 		0456F1CC1D59100D005F8326 /* UIViewScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewScan.swift; sourceTree = "<group>"; };
 		0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldViewModeScan.swift; sourceTree = "<group>"; };
 		0456F1D01D59539B005F8326 /* UISwitchBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISwitchBindings.swift; sourceTree = "<group>"; };
+		0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIActivityIndicatorViewBindings.swift; sourceTree = "<group>"; };
+		0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonBindings.swift; sourceTree = "<group>"; };
+		0456F1D81D5A5F69005F8326 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		0456F1DA1D5A7E8A005F8326 /* UIControlAlignmentScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlAlignmentScan.swift; sourceTree = "<group>"; };
 		04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorConsole.swift; sourceTree = "<group>"; };
 		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
@@ -187,6 +195,8 @@
 			isa = PBXGroup;
 			children = (
 				0448989F1D4FCD330026F43A /* MKMapViewBindings.swift */,
+				0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */,
+				0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */,
 				044898A01D4FCD330026F43A /* UILabelBindings.swift */,
 				044898A11D4FCD330026F43A /* UIScrollViewBindings.swift */,
 				044898A21D4FCD330026F43A /* UISegmentedControlBindings.swift */,
@@ -212,6 +222,7 @@
 				0456F1C61D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift */,
 				0456F1C81D590F72005F8326 /* UIBlurEffectStyleScan.swift */,
 				044898AA1D4FCD330026F43A /* UIColorScan.swift */,
+				0456F1DA1D5A7E8A005F8326 /* UIControlAlignmentScan.swift */,
 				0456F1BC1D590C35005F8326 /* UIEdgeInsetsScan.swift */,
 				044898AC1D4FCD330026F43A /* UIFontScan.swift */,
 				0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */,
@@ -226,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				04D3B64E1D52B244002800F0 /* UIView.swift */,
+				0456F1D81D5A5F69005F8326 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -328,7 +340,9 @@
 				044898D61D4FCEA80026F43A /* Parser.swift in Sources */,
 				04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */,
 				044898C01D4FCD330026F43A /* UIView+Stage.m in Sources */,
+				0456F1D51D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift in Sources */,
 				044898BC1D4FCD330026F43A /* StageRuntimeHelpers.m in Sources */,
+				0456F1D91D5A5F69005F8326 /* UIImage.swift in Sources */,
 				044898B71D4FCD330026F43A /* LiveContext.swift in Sources */,
 				044898CD1D4FCD330026F43A /* UIFontScan.swift in Sources */,
 				044898C41D4FCD330026F43A /* UISegmentedControlBindings.swift in Sources */,
@@ -365,6 +379,8 @@
 				044898B41D4FCD330026F43A /* Definition.swift in Sources */,
 				04D3B6541D52B420002800F0 /* StackingView.swift in Sources */,
 				044898B51D4FCD330026F43A /* DevelopmentServerDefinitionFactory.swift in Sources */,
+				0456F1DB1D5A7E8A005F8326 /* UIControlAlignmentScan.swift in Sources */,
+				0456F1D71D5A523C005F8326 /* UIButtonBindings.swift in Sources */,
 				044898B31D4FCD330026F43A /* DefaultDefinitionFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

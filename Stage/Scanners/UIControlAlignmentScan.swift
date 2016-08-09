@@ -1,5 +1,5 @@
 //
-//  NSObject+Stage.h
+//  UIControlAlignmentScan.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,19 +19,28 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-typedef void (^VoidBlock)(void);
-typedef NS_ENUM(NSUInteger, StageAssociationPolicy) {
-    Assign = 0,
-    RetainNonatomic = 1,
-    CopyNonatomic = 3,
-    RetainAtomic = 01401,
-    CopyAtomic = 01403
-};
+public extension UIControlContentHorizontalAlignment {
+    private static let nameMap : [String: UIControlContentHorizontalAlignment] = {
+        [ "left": .Left,
+          "right": .Right,
+          "center": .Center,
+          "fill": .Fill ]
+    }()
+    public static func create(using scanner: StageRuleScanner) throws -> UIControlContentHorizontalAlignment {
+        return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
+    }
+}
 
-@interface NSObject (Stage)
-- (void)stage_onDeallocExecuteBlock:(nonnull VoidBlock)block NS_SWIFT_NAME(onDeallocation(_:));
-- (void)associateObject:(nullable id)object key:(nonnull void*)key policy:(StageAssociationPolicy)policy;
-- (nullable id)associatedObjectWithKey:(nonnull void*)key NS_SWIFT_NAME(associatedObject(key:));
-@end
+public extension UIControlContentVerticalAlignment {
+    private static let nameMap : [String: UIControlContentVerticalAlignment] = {
+        [ "top": .Top,
+          "bottom": .Bottom,
+          "center": .Center,
+          "fill": .Fill ]
+    }()
+    public static func create(using scanner: StageRuleScanner) throws -> UIControlContentVerticalAlignment {
+        return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
+    }
+}

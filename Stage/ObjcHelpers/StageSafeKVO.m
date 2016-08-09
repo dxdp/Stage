@@ -92,11 +92,16 @@ typedef id (^ArrayFlatMapBlock)(id object, NSInteger index);
 }
 
 - (void)stopObserving {
+    if (!self.object || !self.target) return;
+    id object = self.object, target = self.target;
+    self.object = nil;
+    self.target = nil;
+
     for (NSString* keyPath in self.keyPaths) {
-        [self.target removeObserver:self forKeyPath:keyPath];
+        [target removeObserver:self forKeyPath:keyPath];
     }
-    objc_setAssociatedObject(self.object, kSafeKvoLifetimeAssociation, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.target, kSafeKvoLifetimeAssociation, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(object, kSafeKvoLifetimeAssociation, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(target, kSafeKvoLifetimeAssociation, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

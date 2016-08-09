@@ -53,7 +53,15 @@
     static void* kOnDeallocationBlocks = &kOnDeallocationBlocks;
     NSMutableArray* scheduledBlocks = objc_getAssociatedObject(self, kOnDeallocationBlocks) ?: [NSMutableArray new];
     [scheduledBlocks addObject:[[StageDeallocationBlock alloc] initWithBlock:block]];
-    objc_setAssociatedObject(self, kOnDeallocationBlocks, scheduledBlocks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self associateObject:scheduledBlocks key:kOnDeallocationBlocks policy:RetainNonatomic];
+}
+
+- (id)associatedObjectWithKey:(void *)key {
+    return objc_getAssociatedObject(self, key);
+}
+
+- (void)associateObject:(id)object key:(void *)key policy:(StageAssociationPolicy)policy {
+    objc_setAssociatedObject(self, key, object, (objc_AssociationPolicy)policy);
 }
 
 @end
