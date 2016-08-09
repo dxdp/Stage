@@ -186,8 +186,8 @@ public extension UIButton {
         }
 
         init(owner: UIButton) {
-            self.owner = owner
             super.init()
+            self.owner = owner
         }
 
         private func updateAttributedString() {

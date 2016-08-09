@@ -45,8 +45,8 @@ public extension UIActivityIndicatorView {
         var startsWhenShown: Bool = false
 
         init(owner: UIActivityIndicatorView) {
-            self.owner = owner
             super.init()
+            self.owner = owner
             StageSafeKVO.observer(self, watchKey: "hidden", inObject: owner) { [weak self] _, _, _ in
                 guard let this = self, let owner = this.owner else { return }
                 if !owner.hidden && !owner.isAnimating() && this.startsWhenShown {

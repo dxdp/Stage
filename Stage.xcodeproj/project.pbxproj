@@ -57,6 +57,7 @@
 		0456F1D71D5A523C005F8326 /* UIButtonBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */; };
 		0456F1D91D5A5F69005F8326 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1D81D5A5F69005F8326 /* UIImage.swift */; };
 		0456F1DB1D5A7E8A005F8326 /* UIControlAlignmentScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1DA1D5A7E8A005F8326 /* UIControlAlignmentScan.swift */; };
+		0456F1DD1D5A99C7005F8326 /* UIImageBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456F1DC1D5A99C7005F8326 /* UIImageBindings.swift */; };
 		04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */; };
 		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
 		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
@@ -116,6 +117,7 @@
 		0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonBindings.swift; sourceTree = "<group>"; };
 		0456F1D81D5A5F69005F8326 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		0456F1DA1D5A7E8A005F8326 /* UIControlAlignmentScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlAlignmentScan.swift; sourceTree = "<group>"; };
+		0456F1DC1D5A99C7005F8326 /* UIImageBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageBindings.swift; sourceTree = "<group>"; };
 		04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorConsole.swift; sourceTree = "<group>"; };
 		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				0448989F1D4FCD330026F43A /* MKMapViewBindings.swift */,
 				0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */,
 				0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */,
+				0456F1DC1D5A99C7005F8326 /* UIImageBindings.swift */,
 				044898A01D4FCD330026F43A /* UILabelBindings.swift */,
 				044898A11D4FCD330026F43A /* UIScrollViewBindings.swift */,
 				044898A21D4FCD330026F43A /* UISegmentedControlBindings.swift */,
@@ -340,6 +343,7 @@
 				044898D61D4FCEA80026F43A /* Parser.swift in Sources */,
 				04D3B64C1D52A99D002800F0 /* ErrorConsole.swift in Sources */,
 				044898C01D4FCD330026F43A /* UIView+Stage.m in Sources */,
+				0456F1DD1D5A99C7005F8326 /* UIImageBindings.swift in Sources */,
 				0456F1D51D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift in Sources */,
 				044898BC1D4FCD330026F43A /* StageRuntimeHelpers.m in Sources */,
 				0456F1D91D5A5F69005F8326 /* UIImage.swift in Sources */,
