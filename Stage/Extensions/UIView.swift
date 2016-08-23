@@ -22,6 +22,24 @@
 import Foundation
 
 public extension UIView {
+    func commonSuperview(with view: UIView) -> UIView? {
+        var witnessed = Set<UIView>([self, view])
+        var viter1: UIView? = self, viter2: UIView? = view
+        while viter1 != nil || viter2 != nil {
+            if let super1 = viter1?.superview {
+                if witnessed.contains(super1) { return super1 }
+                witnessed.insert(super1)
+            }
+            viter1 = viter1?.superview
+            if let super2 = viter2?.superview {
+                if witnessed.contains(super2) { return super2 }
+                witnessed.insert(super2)
+            }
+            viter2 = viter2?.superview
+        }
+        return nil
+    }
+
     public func constrain(attribute myAttribute: NSLayoutAttribute, to view: UIView, attribute: NSLayoutAttribute, multiplier: CGFloat = 1, constant: CGFloat = 0) -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint(item: self, attribute: myAttribute, relatedBy: .Equal, toItem: view, attribute: attribute, multiplier: multiplier, constant: constant)
         constraint.active = true

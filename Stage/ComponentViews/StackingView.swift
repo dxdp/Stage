@@ -95,7 +95,7 @@ public class StackingView: UIView {
                 case .AlignBoth:
                     activeStackingConstraints.append(view.constrain(attribute: alignFirst, to: self, attribute: alignFirst, constant: insetForAttribute(alignFirst)))
                     activeStackingConstraints.append(view.constrain(attribute: alignSecond, to: self, attribute: alignSecond, constant: -insetForAttribute(alignSecond)))
-                default:
+                case .AlignNeither:
                     break
                 }
             }

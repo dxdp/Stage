@@ -1,5 +1,5 @@
 //
-//  Utilities.swift
+//  String.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -21,25 +21,36 @@
 
 import Foundation
 
-public func tap<T>(some: T, @noescape function: T -> ()) -> T {
-    function(some)
-    return some
-}
-
-public extension CollectionType {
-    subscript (safe index: Index) -> Generator.Element? {
-        guard indices.contains(index) else { return nil }
-        return self[index]
+extension String {
+    var leadingIndent: Int {
+        if let range = rangeOfCharacterFromSet(.nonwhitespaceCharacterSet()) {
+            return characters.startIndex.distanceTo(range.startIndex)
+        }
+        return characters.count
     }
-}
 
-func -<T> (left: Set<T>, right: Set<T>) -> Set<T> {
-    return Set(left.flatMap { right.contains($0) ? nil : $0 })
-}
+    var trailingIndent: Int {
+        if let range = rangeOfCharacterFromSet(.nonwhitespaceCharacterSet(), options: .BackwardsSearch) {
+            return range.startIndex.distanceTo(endIndex)
+        }
+        return characters.count
+    }
 
-private let _nwscs = { NSCharacterSet.whitespaceCharacterSet().invertedSet }()
-private let _hexnumericcs = { NSCharacterSet(charactersInString: "0123456789abcdefABCDEF") }()
-extension NSCharacterSet {
-    class func nonwhitespaceCharacterSet() -> NSCharacterSet { return _nwscs }
-    class func hexnumericCharacterSet() -> NSCharacterSet { return _hexnumericcs }
+    var entireRange: NSRange {
+        return NSMakeRange(0, characters.count)
+    }
+
+    func trimmed() -> String {
+        return stringByTrimmingCharactersInSet(.whitespaceCharacterSet())
+    }
+
+    func leftTrimmed() -> String {
+        let indent = leadingIndent
+        return indent < characters.count ? substringFromIndex(startIndex.advancedBy(indent)) : ""
+    }
+
+    func rightTrimmed() -> String {
+        let indent = trailingIndent
+        return indent < characters.count ? substringToIndex(endIndex.advancedBy(-indent)) : ""
+    }
 }

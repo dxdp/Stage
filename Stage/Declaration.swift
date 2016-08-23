@@ -24,10 +24,20 @@ import Foundation
 class StageDeclaration {
     let name: String
     var propertyMap: [String: (String, Int)] = [:]
+    var interpolants: [String: Set<String>] = [:]
     var viewHierarchy: StageViewHierarchyNode?
 
     init(name: String) {
         self.name = name
+    }
+
+    func interpolatedProperty(key: String, dataBinding: [String: String]) -> (String, Int)? {
+        guard let (propertyText, startingLine) = propertyMap[key] else { return nil }
+        var interpolatedText = propertyText
+        dataBinding.forEach { key, value in
+            interpolatedText = interpolatedText.stringByReplacingOccurrencesOfString("#{\(key)}", withString: value)
+        }
+        return (interpolatedText, startingLine)
     }
 }
 
@@ -41,6 +51,7 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
     var currentValue: String?
     var currentLineNumber: Int = 0
     var mapping: [String: (String, Int)] = [:]
+    var interpolants: [String: Set<String>] = [:]
 
     func next(text: String, lineNumber: Int) throws {
         let unrecognizedException = StageException.UnrecognizedContent(
@@ -74,18 +85,43 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
         mapping.forEach { key, value in
             declaration.propertyMap[key] = value
         }
+        interpolants.forEach { key, values in
+            declaration.interpolants[key] = values
+        }
     }
 
     func commitCurrent() {
         guard let propertyName = currentName else { return }
+        let value = String(self.currentValue!)
         if mapping.keys.contains(propertyName) {
-            print("Warning. Overriding previously set value for property '\(propertyName)'\n\(mapping[propertyName])\nwith new value:\n\(currentValue!)")
+            print("Warning. Overriding previously set value for property '\(propertyName)'\n\(mapping[propertyName])\nwith new value:\n\(value)")
         }
 
-        mapping[propertyName] = (String(currentValue!), currentLineNumber)
+        mapping[propertyName] = (value, currentLineNumber)
         currentName = nil
         currentValue = nil
         currentLineNumber = 0
+
+        let keys = interpolants(of: value)
+        keys.forEach {
+            interpolants[$0] = interpolants[$0] ?? Set()
+            interpolants[$0]!.insert(propertyName)
+        }
+    }
+
+    static let interpolantExpression: NSRegularExpression = {
+        return try! NSRegularExpression(pattern: "#\\{[^\\{]*?\\}", options: .init(rawValue: 0))
+    }()
+    func interpolants(of string: String) -> Set<String> {
+        let matches = PropertySettersInterpreter.interpolantExpression.matchesInString(string, options: .init(rawValue: 0), range: string.entireRange)
+        var values = Set<String>()
+        for match in matches where match.range.length > 3 { // account for '#{}'
+            let start = string.startIndex.advancedBy(match.range.location + 2)
+            let end = start.advancedBy(match.range.length - 3)
+            let key = string.substringWithRange(start..<end)
+            values.insert(key)
+        }
+        return values
     }
 }
 

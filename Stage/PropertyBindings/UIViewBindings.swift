@@ -76,9 +76,9 @@ private var UIView_propertyTable = {
             .apply { (view: UIView, value, context) in if (value) { view.constrainToSuperviewEdges() } }
 
         $0.register("horizontalCompressionResistance") { scanner in try scanner.scanFloat() }
-            .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis:.Vertical) }
+            .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis: .Horizontal) }
         $0.register("horizontalContentHuggingPriority") { scanner in try scanner.scanFloat() }
-            .apply { (view: UIView, value) in view.setContentHuggingPriority(value, forAxis:.Horizontal) }
+            .apply { (view: UIView, value) in view.setContentHuggingPriority(value, forAxis: .Horizontal) }
 
         $0.register("layoutAttributes") { scanner in try scanner.scanStageLayoutConstraints() }
             .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = false }
@@ -114,9 +114,9 @@ private var UIView_propertyTable = {
             .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = value }
 
         $0.register("verticalCompressionResistance") { scanner in try scanner.scanFloat() }
-            .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis:.Vertical) }
+            .apply { (view: UIView, value) in view.setContentCompressionResistancePriority(value, forAxis: .Vertical) }
         $0.register("verticalContentHuggingPriority") { scanner in try scanner.scanFloat() }
-            .apply { (view: UIView, value) in view.setContentHuggingPriority(value, forAxis:.Horizontal) }
+            .apply { (view: UIView, value) in view.setContentHuggingPriority(value, forAxis: .Vertical) }
     }
 }()
 public extension UIView {

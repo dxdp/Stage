@@ -21,10 +21,39 @@
 
 import Foundation
 
+public protocol LiveContextMutator {
+    func bind(key: String, value: String?)
+}
+
+private class DefaultLiveContextMutator: LiveContextMutator {
+    let context: StageLiveContext
+    var mutatedKeys: [String:String?] = [:]
+    init(context: StageLiveContext) {
+        self.context = context
+    }
+
+    func bind(key: String, value: String?) {
+        mutatedKeys[key] = value
+    }
+
+    func finalize() throws {
+        var keysChanged: Set<String> = Set()
+        mutatedKeys.forEach { key, value in
+            if value != context.dataBindings[key] {
+                keysChanged.insert(key)
+                if value == nil { context.dataBindings.removeValueForKey(key) }
+                else { context.dataBindings[key] = value }
+            }
+        }
+
+        try context.updateChangedKeys(keysChanged)
+    }
+}
+
 public class StageLiveContext {
     let stage: StageDefinition
     let rootDefinition: StageDeclaration
-    let dataBindings: [String: String]
+    var dataBindings: [String: String]
     var viewBindings: [String: StageViewBinding] = [:]
     var childQueue: [StageViewHierarchyNode] = []
 
@@ -65,6 +94,27 @@ public class StageLiveContext {
             throw StageException.InvalidViewType(message: "Unexpected type \(T.self) for view named \(name). Expecting type \(view.dynamicType)", backtrace: [])
         default:
             throw StageException.UnknownView(message: "Unknown view \(name) in view hierarchy", backtrace: [])
+        }
+    }
+
+    public func update(@noescape function: LiveContextMutator -> ()) throws {
+        let mutator = DefaultLiveContextMutator(context: self)
+        function(mutator)
+        try mutator.finalize()
+    }
+
+    private func updateChangedKeys(keys: Set<String>) throws {
+        try stage.declarations.forEach { _, declaration in
+            let intersectingKeys = keys.intersect(declaration.interpolants.keys)
+            try intersectingKeys.forEach { updatedKey in
+                let propertiesUpdated = declaration.interpolants[updatedKey]!
+                do {
+                    try applyDeclarations(declaration, keys: Array(propertiesUpdated), pass: .ViewConstruction)
+                    try applyDeclarations(declaration, keys: Array(propertiesUpdated), pass: .TreeConstruction(context: self))
+                } catch let ex as StageException {
+                    throw ex.withBacktraceMessage("while resetting properties in \(declaration.name)")
+                }
+            }
         }
     }
 
@@ -153,7 +203,7 @@ public class StageLiveContext {
         }
         let chain = StageRuntimeHelpers.inheritanceChainRegistries(for: view)
         try keys.forEach { key in
-            if let (propertyText, startingLine) = declaration.propertyMap[key] {
+            if let (propertyText, startingLine) = declaration.interpolatedProperty(key, dataBinding: dataBindings) {
                 let scanner = StageRuleScanner(string: propertyText)
                 scanner.charactersToBeSkipped = .whitespaceCharacterSet()
                 scanner.startingLine = startingLine
