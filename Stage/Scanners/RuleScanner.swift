@@ -22,7 +22,7 @@
 import Foundation
 
 public class StageRuleScanner: NSScanner {
-    var startingLine: Int = 0
+    public internal(set) var startingLine: Int = 0
 
     let _string: String
     public override var string: String { return _string }

@@ -52,6 +52,15 @@ public extension UIView {
         return edges.map { constrain(attribute: $0, to: superview, attribute: $0) }
     }
 
+    public func constrain(attribute myAttribute: NSLayoutAttribute, to constant: CGFloat) -> NSLayoutConstraint {
+        let constraint = constraints.filter { ($0.firstItem as! NSObject) == self && $0.firstAttribute == myAttribute && $0.secondItem == nil }.first ??
+            tap(NSLayoutConstraint(item: self, attribute: myAttribute, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: constant)) {
+                $0.active = true
+        }
+        constraint.constant = constant
+        return constraint
+    }
+
     public func removeAllSubviews() {
         subviews.forEach { $0.removeFromSuperview() }
     }

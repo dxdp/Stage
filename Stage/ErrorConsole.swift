@@ -65,6 +65,15 @@ public class ErrorConsole : StageDefinitionErrorListener {
         window.makeKeyAndVisible()
         (window.rootViewController as? ErrorConsoleRootViewController)?.error(exception)
     }
+    public func trap<T>(code: Void throws -> T) -> T? {
+        do {
+            return try code()
+        } catch let ex as StageException {
+            error(ex)
+        } catch {
+        }
+        return nil
+    }
 }
 
 public class ErrorConsoleRootViewController: UIViewController, StageDefinitionErrorListener {

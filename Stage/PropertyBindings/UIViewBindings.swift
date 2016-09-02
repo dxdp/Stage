@@ -110,6 +110,12 @@ private var UIView_propertyTable = {
                 NSLayoutConstraint.activateConstraints(autoLayoutConstraints)
         }
 
+        $0.register("layoutMargins") { scanner in try UIEdgeInsets.create(using: scanner) }
+            .apply { (view: UIView, value) in
+                view.layoutMargins = value
+                view.superview?.setNeedsUpdateConstraints()
+        }
+
         $0.register("translatesAutoresizingMaskIntoConstraints") { scanner in try scanner.scanBool() }
             .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = value }
 

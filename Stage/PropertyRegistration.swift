@@ -40,20 +40,27 @@ struct Handlers {
     }
 }
 
-enum PropertySetPass {
+public enum PropertySetPass {
     case ViewConstruction
     case TreeConstruction(context: StageLiveContext)
 }
 
-protocol StageConverter {
+public protocol StageConversionExecutor {
     func execute(scanner: StageRuleScanner, view: UIView, pass: PropertySetPass) throws
 }
+public protocol StageConverter : StageConversionExecutor {
+    associatedtype SelfType
+    associatedtype ApplyFunction
+    associatedtype ApplyWithContextFunction
+    func apply(function: ApplyFunction) -> SelfType
+    func apply(function: ApplyWithContextFunction) -> SelfType
+}
 
-class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
-    typealias SelfType = StagePropertyConverter<T, ViewType>
+public class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
+    public typealias SelfType = StagePropertyConverter<T, ViewType>
     typealias ScanFunction = StageRuleScanner throws -> T
-    typealias ApplyFunction = (view: ViewType, value: T) throws -> ()
-    typealias ApplyWithContextFunction = (view: ViewType, value: T, context: StageLiveContext) throws -> ()
+    public typealias ApplyFunction = (view: ViewType, value: T) throws -> ()
+    public typealias ApplyWithContextFunction = (view: ViewType, value: T, context: StageLiveContext) throws -> ()
 
     let name: String
     let scanFunction: ScanFunction
@@ -72,7 +79,7 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
         }
         return boxingScan
     }()
-    func apply(function: ApplyFunction) -> SelfType {
+    public func apply(function: ApplyFunction) -> SelfType {
         let boxingApply: TypelessApplyFunction = { view, value in
             if let view = view as? ViewType, let value = value as? T {
                 try function(view: view, value: value)
@@ -82,7 +89,7 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
         registration?.converters[name] = self
         return self
     }
-    func apply(function: ApplyWithContextFunction) -> SelfType {
+    public func apply(function: ApplyWithContextFunction) -> SelfType {
         let boxingApplyWithContext: TypelessApplyWithContextFunction = { view, value, context in
             if let view = view as? ViewType, let value = value as? T {
                 try function(view: view, value: value, context: context)
@@ -93,7 +100,7 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
         return self
     }
 
-    func execute(scanner: StageRuleScanner, view: UIView, pass: PropertySetPass) throws {
+    public func execute(scanner: StageRuleScanner, view: UIView, pass: PropertySetPass) throws {
         let (scan, apply, applyWithContext) = handlers.asTuple
         let value = try scan(scanner)
         switch pass {
@@ -106,9 +113,9 @@ class StagePropertyConverter<T: Any, ViewType: UIView>: StageConverter {
 }
 
 @objc public class StagePropertyRegistration: NSObject {
-    var converters = [String: StageConverter]()
+    var converters = [String: StageConversionExecutor]()
 
-    @nonobjc func register<T: Any, ViewType: UIView>(name: String, block: StageRuleScanner throws -> T) -> StagePropertyConverter<T, ViewType> {
+    @nonobjc public func register<T: Any, ViewType: UIView>(name: String, block: StageRuleScanner throws -> T) -> StagePropertyConverter<T, ViewType> {
         return StagePropertyConverter(registration: self, name: name, scan: block)
     }
 

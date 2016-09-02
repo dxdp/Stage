@@ -22,21 +22,30 @@
 import Foundation
 
 public protocol LiveContextMutator {
+    init(context: StageLiveContext)
     func bind(key: String, value: String?)
+    func finalize() throws
+
+
 }
 
-private class DefaultLiveContextMutator: LiveContextMutator {
+public class BasicLiveContextMutator: LiveContextMutator {
     let context: StageLiveContext
     var mutatedKeys: [String:String?] = [:]
-    init(context: StageLiveContext) {
+    public let updateChangedKeys: Set<String> throws -> ()
+    public required init(context: StageLiveContext) {
         self.context = context
+        self.updateChangedKeys = context.updateChangedKeys
     }
 
-    func bind(key: String, value: String?) {
+    public func bind(key: String, value: String?) {
         mutatedKeys[key] = value
     }
+    public func bind<T: RawRepresentable where T.RawValue == String>(key: T, value: String?) {
+        mutatedKeys[key.rawValue] = value
+    }
 
-    func finalize() throws {
+    public func finalize() throws {
         var keysChanged: Set<String> = Set()
         mutatedKeys.forEach { key, value in
             if value != context.dataBindings[key] {
@@ -46,7 +55,7 @@ private class DefaultLiveContextMutator: LiveContextMutator {
             }
         }
 
-        try context.updateChangedKeys(keysChanged)
+        try updateChangedKeys(keysChanged)
     }
 }
 
@@ -97,8 +106,8 @@ public class StageLiveContext {
         }
     }
 
-    public func update(@noescape function: LiveContextMutator -> ()) throws {
-        let mutator = DefaultLiveContextMutator(context: self)
+    public func update<T: LiveContextMutator>(@noescape function: T -> ()) throws {
+        let mutator = T(context: self)
         function(mutator)
         try mutator.finalize()
     }
