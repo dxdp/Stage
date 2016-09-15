@@ -25,20 +25,20 @@ import MapKit
 public extension StageRegister {
     public class func MapView(_ registration: StagePropertyRegistration) {
         tap(registration) {
-            $0.register("pitchEnabled") { scanner in try scanner.scanBool() }
+            $0.registerBool("pitchEnabled")
                 .apply { (view: MKMapView, value) in view.isPitchEnabled = value }
-            $0.register("rotateEnabled") { scanner in try scanner.scanBool() }
+            $0.registerBool("rotateEnabled")
                 .apply { (view: MKMapView, value) in view.isRotateEnabled = value }
-            $0.register("scrollEnabled") { scanner in try scanner.scanBool() }
+            $0.registerBool("scrollEnabled")
                 .apply { (view: MKMapView, value) in view.isScrollEnabled = value }
-            $0.register("zoomEnabled") { scanner in try scanner.scanBool() }
+            $0.registerBool("zoomEnabled")
                 .apply { (view: MKMapView, value) in view.isZoomEnabled = value }
             
-            $0.register("showsPointsOfInterest") { scanner in try scanner.scanBool() }
+            $0.registerBool("showsPointsOfInterest")
                 .apply { (view: MKMapView, value) in view.showsPointsOfInterest = value }
-            $0.register("showsBuildings") { scanner in try scanner.scanBool() }
+            $0.registerBool("showsBuildings")
                 .apply { (view: MKMapView, value) in view.showsBuildings = value }
-            $0.register("showsUserLocation") { scanner in try scanner.scanBool() }
+            $0.registerBool("showsUserLocation")
                 .apply { (view: MKMapView, value) in view.showsUserLocation = value }
             
             $0.register("mapType") { scanner in try MKMapType.create(using: scanner) }

@@ -31,16 +31,16 @@ public protocol StageDefinitionFactory {
     func build(contentsOfFile file: String) throws -> StageDefinition
     func build(contentsOfFile file: String, encoding: String.Encoding) throws -> StageDefinition
     func use(_ errorListener: StageDefinitionErrorListener)
-    func registerTypes(_ block: (PropertyRegistrar) -> ())
+    func registerTypes(_ block: (StageTypeRegistration) -> ())
 }
 
 open class StageDefinition {
-    let propertyRegistrar: PropertyRegistrar
+    let types: StageTypeRegistration
     let errorListener: StageDefinitionErrorListener?
     var declarations: [String: StageDeclaration] = [:]
     var debugIdentifier = ""
-    init(propertyRegistrar: PropertyRegistrar, errorListener: StageDefinitionErrorListener?) {
-        self.propertyRegistrar = propertyRegistrar
+    init(typeRegistry: StageTypeRegistration, errorListener: StageDefinitionErrorListener?) {
+        self.types = typeRegistry
         self.errorListener = errorListener
     }
 

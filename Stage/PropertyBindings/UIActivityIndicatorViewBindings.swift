@@ -26,12 +26,12 @@ public extension StageRegister {
         tap(registration) {
             $0.register("activityIndicatorViewStyle") { scanner in try UIActivityIndicatorViewStyle.create(using: scanner) }
                 .apply { (view: UIActivityIndicatorView, value) in view.activityIndicatorViewStyle = value }
-            $0.register("color") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("color") 
                 .apply { (view: UIActivityIndicatorView, value) in view.color = value }
             
-            $0.register("hidesWhenStopped") { scanner in try scanner.scanBool() }
+            $0.registerBool("hidesWhenStopped")
                 .apply { (view: UIActivityIndicatorView, value) in view.hidesWhenStopped = value }
-            $0.register("startsWhenShown") { scanner in try scanner.scanBool() }
+            $0.registerBool("startsWhenShown")
                 .apply { (view: UIActivityIndicatorView, value) in
                     view.stageState.startsWhenShown = value
                     if !view.isHidden && !view.isAnimating { view.startAnimating() }

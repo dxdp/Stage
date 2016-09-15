@@ -63,7 +63,7 @@
 		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
 		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
 		04D3B6561D53B7D4002800F0 /* StackingViewBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */; };
-		13650EE81D89EC8E0085D8E0 /* PropertyRegistrar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13650EE71D89EC8E0085D8E0 /* PropertyRegistrar.swift */; };
+		13650EE81D89EC8E0085D8E0 /* TypeRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13650EE71D89EC8E0085D8E0 /* TypeRegistration.swift */; };
 		13650EEA1D8B13540085D8E0 /* LoadDefaultBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13650EE91D8B13540085D8E0 /* LoadDefaultBindings.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,12 +87,12 @@
 		0448989C1D4FCD330026F43A /* UIView+Stage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Stage.h"; sourceTree = "<group>"; };
 		0448989D1D4FCD330026F43A /* UIView+Stage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Stage.m"; sourceTree = "<group>"; };
 		0448989F1D4FCD330026F43A /* MKMapViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKMapViewBindings.swift; sourceTree = "<group>"; };
-		044898A01D4FCD330026F43A /* UILabelBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelBindings.swift; sourceTree = "<group>"; };
-		044898A11D4FCD330026F43A /* UIScrollViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIScrollViewBindings.swift; sourceTree = "<group>"; };
+		044898A01D4FCD330026F43A /* UILabelBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UILabelBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		044898A11D4FCD330026F43A /* UIScrollViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UIScrollViewBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		044898A21D4FCD330026F43A /* UISegmentedControlBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISegmentedControlBindings.swift; sourceTree = "<group>"; };
-		044898A31D4FCD330026F43A /* UITextFieldBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldBindings.swift; sourceTree = "<group>"; };
-		044898A41D4FCD330026F43A /* UITextViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextViewBindings.swift; sourceTree = "<group>"; };
-		044898A51D4FCD330026F43A /* UIViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewBindings.swift; sourceTree = "<group>"; };
+		044898A31D4FCD330026F43A /* UITextFieldBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UITextFieldBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		044898A41D4FCD330026F43A /* UITextViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UITextViewBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		044898A51D4FCD330026F43A /* UIViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UIViewBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		044898A61D4FCD330026F43A /* PropertyRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyRegistration.swift; sourceTree = "<group>"; };
 		044898A81D4FCD330026F43A /* EnumScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumScanner.swift; sourceTree = "<group>"; };
 		044898A91D4FCD330026F43A /* RuleScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleScanner.swift; sourceTree = "<group>"; };
@@ -115,18 +115,18 @@
 		0456F1CA1D590FB6005F8326 /* UIKeyboardTypeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKeyboardTypeScan.swift; sourceTree = "<group>"; };
 		0456F1CC1D59100D005F8326 /* UIViewScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewScan.swift; sourceTree = "<group>"; };
 		0456F1CE1D591087005F8326 /* UITextFieldViewModeScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldViewModeScan.swift; sourceTree = "<group>"; };
-		0456F1D01D59539B005F8326 /* UISwitchBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISwitchBindings.swift; sourceTree = "<group>"; };
-		0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIActivityIndicatorViewBindings.swift; sourceTree = "<group>"; };
-		0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonBindings.swift; sourceTree = "<group>"; };
+		0456F1D01D59539B005F8326 /* UISwitchBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UISwitchBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UIActivityIndicatorViewBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UIButtonBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0456F1D81D5A5F69005F8326 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		0456F1DA1D5A7E8A005F8326 /* UIControlAlignmentScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIControlAlignmentScan.swift; sourceTree = "<group>"; };
-		0456F1DC1D5A99C7005F8326 /* UIImageBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageBindings.swift; sourceTree = "<group>"; };
+		0456F1DC1D5A99C7005F8326 /* UIImageBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = UIImageBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0469CED81D6CC3C100B25109 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		04D3B64B1D52A99D002800F0 /* ErrorConsole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorConsole.swift; sourceTree = "<group>"; };
 		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
-		04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingViewBindings.swift; sourceTree = "<group>"; };
-		13650EE71D89EC8E0085D8E0 /* PropertyRegistrar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyRegistrar.swift; sourceTree = "<group>"; };
+		04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = StackingViewBindings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		13650EE71D89EC8E0085D8E0 /* TypeRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeRegistration.swift; sourceTree = "<group>"; };
 		13650EE91D8B13540085D8E0 /* LoadDefaultBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDefaultBindings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -174,8 +174,8 @@
 				044898931D4FCD330026F43A /* LiveContext.swift */,
 				044898941D4FCD330026F43A /* Mapper.swift */,
 				044898D51D4FCEA80026F43A /* Parser.swift */,
-				13650EE71D89EC8E0085D8E0 /* PropertyRegistrar.swift */,
 				044898A61D4FCD330026F43A /* PropertyRegistration.swift */,
+				13650EE71D89EC8E0085D8E0 /* TypeRegistration.swift */,
 				044898AF1D4FCD330026F43A /* Utilities.swift */,
 				044898B01D4FCD330026F43A /* ViewBinding.swift */,
 				044898B11D4FCD330026F43A /* ViewHierarchyNode.swift */,
@@ -398,7 +398,7 @@
 				0469CED91D6CC3C100B25109 /* String.swift in Sources */,
 				0456F1D71D5A523C005F8326 /* UIButtonBindings.swift in Sources */,
 				044898B31D4FCD330026F43A /* DefaultDefinitionFactory.swift in Sources */,
-				13650EE81D89EC8E0085D8E0 /* PropertyRegistrar.swift in Sources */,
+				13650EE81D89EC8E0085D8E0 /* TypeRegistration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

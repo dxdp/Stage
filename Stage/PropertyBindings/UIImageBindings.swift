@@ -26,7 +26,7 @@ public extension StageRegister {
         tap(registration) {
             $0.register("image") { scanner in scanner.string.trimmed() }
                 .apply { (view: UIImageView, value) in view.stageState.image = UIImage(named: value) }
-            $0.register("tintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("tintColor") 
                 .apply { (view: UIImageView, value) in view.stageState.tintColor = value }
         }
     }

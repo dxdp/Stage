@@ -24,7 +24,7 @@ import Foundation
 public extension StageRegister {
     public class func Switch(_ registration: StagePropertyRegistration) {
         tap(registration) {
-            $0.register("on") { scanner in try scanner.scanBool() }
+            $0.registerBool("on") 
                 .apply { (view: UISwitch, value) in view.isOn = value }
 
             // Images
@@ -66,11 +66,11 @@ public extension StageRegister {
             }
 
             // Tint Colors
-            $0.register("tintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("tintColor") 
                 .apply { (view: UISwitch, value) in view.tintColor = value }
-            $0.register("onTintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("onTintColor") 
                 .apply { (view: UISwitch, value) in view.onTintColor = value }
-            $0.register("thumbTintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("thumbTintColor") 
                 .apply { (view: UISwitch, value) in view.thumbTintColor = value }
         }
     }

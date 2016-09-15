@@ -37,14 +37,14 @@ class StageDefinitionIndex {
 open class DefaultDefinitionFactory : StageDefinitionFactory {
     let index: StageDefinitionIndex
     var errorListener: StageDefinitionErrorListener?
-    let propertyRegistrar: PropertyRegistrar
+    let typeRegistry: StageTypeRegistration
 
     public init(bundles: [Bundle] = [.main] + Bundle.allFrameworks) {
         index = StageDefinitionIndex(bundles: bundles)
-        propertyRegistrar = tap(PropertyRegistrar()) { StageRegister.LoadDefaults($0) }
+        typeRegistry = tap(StageTypeRegistration()) { StageRegister.LoadDefaults($0) }
     }
-    open func registerTypes(_ block: (PropertyRegistrar) -> ()) -> Void {
-        block(propertyRegistrar)
+    open func registerTypes(_ block: (StageTypeRegistration) -> ()) -> Void {
+        block(typeRegistry)
     }
     
     open func build(data: Data) throws -> StageDefinition {
@@ -75,7 +75,7 @@ open class DefaultDefinitionFactory : StageDefinitionFactory {
                 throw StageException.invalidDataEncoding(backtrace: [])
             }
             let lines = string.components(separatedBy: CharacterSet(charactersIn: "\r\n"))
-            let definition = try StageParser(propertyRegistrar: propertyRegistrar, errorListener: errorListener).parse(lines, identifier: identifier)
+            let definition = try StageParser(typeRegistry: typeRegistry, errorListener: errorListener).parse(lines, identifier: identifier)
             return definition
         } catch let ex as StageException {
             errorListener?.error(ex)

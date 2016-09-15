@@ -48,7 +48,7 @@ public extension StageRegister {
                         view.attributedText = attributedText
                     }
             }
-            $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("textColor") 
                 .apply { (view: UILabel, value) in view.textColor = value }
         }
     }

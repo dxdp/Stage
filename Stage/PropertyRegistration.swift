@@ -133,3 +133,15 @@ open class StagePropertyRegistration {
         try converter.execute(scanner, view: view, pass: pass)
     }
 }
+
+public extension StagePropertyRegistration {
+    public func registerBool<ViewType: UIView>(_ name: String) -> StagePropertyConverter<Bool, ViewType> {
+        return StagePropertyConverter(registration: self, name: name) { scanner in try scanner.scanBool() }
+    }
+    public func registerColor<ViewType: UIView>(_ name: String) -> StagePropertyConverter<UIColor, ViewType> {
+        return StagePropertyConverter(registration: self, name: name) { scanner in try UIColor.create(using: scanner) }
+    }
+    public func registerCGFloat<ViewType: UIView>(_ name: String) -> StagePropertyConverter<CGFloat, ViewType> {
+        return StagePropertyConverter(registration: self, name: name) { scanner in try scanner.scanCGFloat() }
+    }
+}

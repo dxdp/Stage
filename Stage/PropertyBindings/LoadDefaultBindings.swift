@@ -13,7 +13,7 @@ public class StageRegister {
 }
 
 public extension StageRegister {
-    public final class func LoadDefaults(_ types: PropertyRegistrar) {
+    public final class func LoadDefaults(_ types: StageTypeRegistration) {
         let defaults = [(StageRegister.View,            UIView.self),
                         (StageRegister.TextView,        UITextView.self),
                         (StageRegister.TextField,       UITextField.self),

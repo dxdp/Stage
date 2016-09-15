@@ -33,13 +33,13 @@ public extension StageRegister {
                 .apply { (view: UIButton, value) in view.imageEdgeInsets = value }
             
             // State -> Drawing behavior flags
-            $0.register("adjustsImageWhenDisabled") { scanner in try scanner.scanBool() }
+            $0.registerBool("adjustsImageWhenDisabled") 
                 .apply { (view: UIButton, value) in view.adjustsImageWhenDisabled = value }
-            $0.register("adjustsImageWhenHighlighted") { scanner in try scanner.scanBool() }
+            $0.registerBool("adjustsImageWhenHighlighted") 
                 .apply { (view: UIButton, value) in view.adjustsImageWhenHighlighted = value }
-            $0.register("reversesTitleShadowWhenHighlighted") { scanner in try scanner.scanBool() }
+            $0.registerBool("reversesTitleShadowWhenHighlighted") 
                 .apply { (view: UIButton, value) in view.reversesTitleShadowWhenHighlighted = value }
-            $0.register("showsTouchWhenHighlighted") { scanner in try scanner.scanBool() }
+            $0.registerBool("showsTouchWhenHighlighted") 
                 .apply { (view: UIButton, value) in view.showsTouchWhenHighlighted = value }
             
             // State images
@@ -49,13 +49,13 @@ public extension StageRegister {
                 .apply { (view: UIButton, value) in view.stageState.highlightImage = UIImage(named: value) }
             
             // Background
-            $0.register("highlightBackgroundColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("highlightBackgroundColor") 
                 .apply { (view: UIButton, value) in view.stageState.highlightBackgroundColor = value }
             
             // Tint colors
-            $0.register("normalImageTintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("normalImageTintColor") 
                 .apply { (view: UIButton, value) in view.stageState.normalImageTintColor = value }
-            $0.register("highlightImageTintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("highlightImageTintColor") 
                 .apply { (view: UIButton, value) in view.stageState.highlightImageTintColor = value }
             
             // Label
@@ -69,12 +69,12 @@ public extension StageRegister {
             $0.register("highlightText") { scanner in scanner.string.trimmed() }
                 .apply { (view: UIButton, value) in view.stageState.highlightText = value }
             
-            $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("textColor") 
                 .apply { (view: UIButton, value) in view.stageState.textColor = value }
-            $0.register("highlightTextColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("highlightTextColor") 
                 .apply { (view: UIButton, value) in view.stageState.highlightTextColor = value }
             
-            $0.register("underlineText") { scanner in try scanner.scanBool() }
+            $0.registerBool("underlineText") 
                 .apply { (view: UIButton, value) in view.stageState.underlineText = value }
         }
     }

@@ -34,7 +34,7 @@ public extension StageRegister {
                 .apply { (view: UITextView, value) in view.text = value }
             $0.register("textAlignment") { scanner in try NSTextAlignment.create(using: scanner) }
                 .apply { (view: UITextView, value) in view.textAlignment = value }
-            $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("textColor") 
                 .apply { (view: UITextView, value) in view.textColor = value }
             $0.register("textContainerInset") { scanner in try UIEdgeInsets.create(using: scanner) }
                 .apply { (view: UITextView, value) in view.textContainerInset = value }

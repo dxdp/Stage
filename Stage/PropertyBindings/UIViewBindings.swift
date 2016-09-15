@@ -24,55 +24,55 @@ import Foundation
 public extension StageRegister {
     public class func View(_ registration: StagePropertyRegistration) {
         tap(registration) {
-            $0.register("alpha") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("alpha") 
                 .apply { (view: UIView, value) in view.alpha = min(max(value, 0), 1) }
 
-            $0.register("backgroundColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("backgroundColor") 
                 .apply { (view: UIView, value) in view.backgroundColor = value }
 
-            $0.register("borderColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("borderColor") 
                 .apply { (view: UIView, value) in view.layer.borderColor = value.cgColor }
-            $0.register("borderRadius") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("borderRadius") 
                 .apply { (view: UIView, value) in view.layer.cornerRadius = value }
-            $0.register("borderWidth") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("borderWidth") 
                 .apply { (view: UIView, value) in view.layer.borderWidth = value }
 
-            $0.register("clipsToBounds") { scanner in try scanner.scanBool() }
+            $0.registerBool("clipsToBounds") 
                 .apply { (view: UIView, value) in view.clipsToBounds = value }
             $0.register("contentMode") { scanner in try UIViewContentMode.create(using: scanner) }
                 .apply { (view: UIView, value) in view.contentMode = value }
 
-            $0.register("hidden") { scanner in try scanner.scanBool() }
+            $0.registerBool("hidden") 
                 .apply { (view: UIView, value) in view.isHidden = value }
 
-            $0.register("masksToBounds") { scanner in try scanner.scanBool() }
+            $0.registerBool("masksToBounds") 
                 .apply { (view: UIView, value) in view.layer.masksToBounds = value }
 
-            $0.register("opacity") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("opacity") 
                 .apply { (view: UIView, value) in view.alpha = min(max(value, 0), 1) }
-            $0.register("opaque") { scanner in try scanner.scanBool() }
+            $0.registerBool("opaque") 
                 .apply { (view: UIView, value) in view.isOpaque = value }
 
-            $0.register("shadowColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("shadowColor") 
                 .apply { (view: UIView, value) in view.layer.shadowColor = value.cgColor }
             $0.register("shadowOffset") { scanner in try CGSize.create(using: scanner) }
                 .apply { (view: UIView, value) in view.layer.shadowOffset = value }
-            $0.register("shadowOpacity") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("shadowOpacity") 
                 .apply { (view: UIView, value) in view.stage_setShadowOpacity(value) }
-            $0.register("shadowRadius") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("shadowRadius") 
                 .apply { (view: UIView, value) in view.stage_setShadowRadius(value) }
 
-            $0.register("tintColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("tintColor") 
                 .apply { (view: UIView, value) in view.tintColor = value }
 
-            $0.register("userInteractionEnabled") { scanner in try scanner.scanBool() }
+            $0.registerBool("userInteractionEnabled") 
                 .apply { (view: UIView, value) in view.isHidden = value }
 
             // Layout properties
             $0.register("autoresize") { scanner in try UIViewAutoresizing.create(using: scanner) }
                 .apply { (view: UIView, value) in view.autoresizingMask = value }
 
-            $0.register("constrainToSuperviewEdges") { scanner in try scanner.scanBool() }
+            $0.registerBool("constrainToSuperviewEdges") 
                 .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = false }
                 .apply { (view: UIView, value, context) in if (value) { view.constrainToSuperviewEdges() } }
 
@@ -117,7 +117,7 @@ public extension StageRegister {
                     view.superview?.setNeedsUpdateConstraints()
             }
 
-            $0.register("translatesAutoresizingMaskIntoConstraints") { scanner in try scanner.scanBool() }
+            $0.registerBool("translatesAutoresizingMaskIntoConstraints") 
                 .apply { (view: UIView, value) in view.translatesAutoresizingMaskIntoConstraints = value }
 
             $0.register("verticalCompressionResistance") { scanner in try scanner.scanFloat() }

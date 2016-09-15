@@ -25,10 +25,10 @@ import UIKit
 // MARK: - Stage Begin
 
 class StageParser {
-    let propertyRegistrar: PropertyRegistrar
+    let typeRegistry: StageTypeRegistration
     let errorListener: StageDefinitionErrorListener?
-    init(propertyRegistrar: PropertyRegistrar, errorListener: StageDefinitionErrorListener?) {
-        self.propertyRegistrar = propertyRegistrar
+    init(typeRegistry: StageTypeRegistration, errorListener: StageDefinitionErrorListener?) {
+        self.typeRegistry = typeRegistry
         self.errorListener = errorListener
     }
 
@@ -62,7 +62,7 @@ class StageParser {
 
     func parse(_ lines: [String], identifier: String? = nil) throws -> StageDefinition {
         let parseContext = Context(lines: lines.map { preprocessLine($0) })
-        let stageDefinition = StageDefinition(propertyRegistrar: propertyRegistrar, errorListener: errorListener)
+        let stageDefinition = StageDefinition(typeRegistry: typeRegistry, errorListener: errorListener)
         stageDefinition.debugIdentifier = identifier ?? ""
         while let line = parseContext.nextLine() {
             if line.isEmpty { continue }

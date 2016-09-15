@@ -1,5 +1,5 @@
 //
-//  PropertyRegistrar.swift
+//  StageTypeRegistration.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -21,7 +21,7 @@
 
 import UIKit
 
-open class PropertyRegistrar {
+open class StageTypeRegistration {
     var table: [String: StagePropertyRegistration] = [:]
 
     public typealias RegistrationFunction = (StagePropertyRegistration) -> ()

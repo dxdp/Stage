@@ -24,14 +24,14 @@ import Foundation
 public extension StageRegister {
     public class func TextField(_ registration: StagePropertyRegistration) {
         tap(registration) {
-            $0.register("adjustsFontSizeToFitWidth") { scanner in try scanner.scanBool() }
+            $0.registerBool("adjustsFontSizeToFitWidth") 
                 .apply { (view: UITextField, value) in view.adjustsFontSizeToFitWidth = value }
             $0.register("font") { scanner in try UIFont.create(using: scanner, defaultPointSize: 14) }
                 .apply { (view: UITextField, value) in view.font = value }
-            $0.register("minimumFontSize") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("minimumFontSize") 
                 .apply { (view: UITextField, value) in view.minimumFontSize = value }
             
-            $0.register("clearsOnBeginEditing") { scanner in try scanner.scanBool() }
+            $0.registerBool("clearsOnBeginEditing") 
                 .apply { (view: UITextField, value) in view.clearsOnBeginEditing = value }
             
             $0.register("keyboardType") { scanner in try UIKeyboardType.create(using: scanner) }
@@ -40,14 +40,14 @@ public extension StageRegister {
             $0.register("placeholder") { scanner in scanner.scanLinesTrimmed().joined(separator: "\n") }
                 .apply { (view: UITextField, value) in view.placeholder = value }
             
-            $0.register("secureTextEntry") { scanner in try scanner.scanBool() }
+            $0.registerBool("secureTextEntry") 
                 .apply { (view: UITextField, value) in view.isSecureTextEntry = value }
             
             $0.register("text") { scanner in scanner.scanLinesTrimmed().joined(separator: "\n") }
                 .apply { (view: UITextField, value) in view.text = value }
             $0.register("textAlignment") { scanner in try NSTextAlignment.create(using: scanner) }
                 .apply { (view: UITextField, value) in view.textAlignment = value }
-            $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
+            $0.registerColor("textColor") 
                 .apply { (view: UITextField, value) in view.textColor = value }
             
             $0.register("clearButtonMode") { scanner in try UITextFieldViewMode.create(using: scanner) }

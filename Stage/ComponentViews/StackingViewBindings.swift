@@ -49,7 +49,7 @@ public extension StageRegister {
             $0.register("contentInset") { scanner in try UIEdgeInsets.create(using: scanner) }
                 .apply { (view: StackingView, value) in view.contentInset = value }
 
-            $0.register("spacing") { scanner in try scanner.scanCGFloat() }
+            $0.registerCGFloat("spacing") 
                 .apply { (view: StackingView, value) in view.spacing = value }
 
             $0.register("stackingAlignment") { scanner in try StackingAlignment.create(using: scanner) }

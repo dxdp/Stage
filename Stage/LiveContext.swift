@@ -210,7 +210,7 @@ open class StageLiveContext {
         guard let view = self.viewBindings[declaration.name]?.view else {
             return
         }
-        let chain = stage.propertyRegistrar.registry(for: view)
+        let chain = stage.types.registry(for: view)
         try keys.forEach { key in
             if let (propertyText, startingLine) = declaration.interpolatedProperty(key: key, dataBinding: dataBindings) {
                 let scanner = StageRuleScanner(string: propertyText)
