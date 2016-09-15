@@ -23,34 +23,34 @@ import Foundation
 
 public protocol LiveContextMutator {
     init(context: StageLiveContext)
-    func bind(key: String, value: String?)
+    func bind(_ key: String, value: String?)
     func finalize() throws
 
 
 }
 
-public class BasicLiveContextMutator: LiveContextMutator {
+open class BasicLiveContextMutator: LiveContextMutator {
     let context: StageLiveContext
     var mutatedKeys: [String:String?] = [:]
-    public let updateChangedKeys: Set<String> throws -> ()
+    open let updateChangedKeys: (Set<String>) throws -> ()
     public required init(context: StageLiveContext) {
         self.context = context
         self.updateChangedKeys = context.updateChangedKeys
     }
 
-    public func bind(key: String, value: String?) {
+    open func bind(_ key: String, value: String?) {
         mutatedKeys[key] = value
     }
-    public func bind<T: RawRepresentable where T.RawValue == String>(key: T, value: String?) {
+    open func bind<T: RawRepresentable>(_ key: T, value: String?) where T.RawValue == String {
         mutatedKeys[key.rawValue] = value
     }
 
-    public func finalize() throws {
+    open func finalize() throws {
         var keysChanged: Set<String> = Set()
         mutatedKeys.forEach { key, value in
             if value != context.dataBindings[key] {
                 keysChanged.insert(key)
-                if value == nil { context.dataBindings.removeValueForKey(key) }
+                if value == nil { context.dataBindings.removeValue(forKey: key) }
                 else { context.dataBindings[key] = value }
             }
         }
@@ -59,7 +59,7 @@ public class BasicLiveContextMutator: LiveContextMutator {
     }
 }
 
-public class StageLiveContext {
+open class StageLiveContext {
     let stage: StageDefinition
     let rootDefinition: StageDeclaration
     var dataBindings: [String: String]
@@ -70,56 +70,56 @@ public class StageLiveContext {
         stage = definition
         rootDefinition = root
         dataBindings = templateData ?? [:]
-        initialViews?.forEach { name, view in viewBindings[name] = .SpecificView(view: view) }
+        initialViews?.forEach { name, view in viewBindings[name] = .specificView(view: view) }
 
         if rootDefinition.viewHierarchy == nil {
-            throw StageException.UnknownViewHierarchy(message: "Attempt to load unknown view hierarchy: \(root.name)", backtrace: [])
+            throw StageException.unknownViewHierarchy(message: "Attempt to load unknown view hierarchy: \(root.name)", backtrace: [])
         }
         try buildViewBindings()
     }
 
-    public func addAsSubview(of container: UIView) throws {
+    open func addAsSubview(of container: UIView) throws {
         guard let root = rootDefinition.viewHierarchy,
             let currentBinding = viewBindings[root.name] else {
                 return
         }
-        viewBindings[root.name] = .SpecificView(view: container)
-        viewBindings[rootDefinition.name] = .SpecificView(view: container)
+        viewBindings[root.name] = .specificView(view: container)
+        viewBindings[rootDefinition.name] = .specificView(view: container)
 
         if let (declaration, keys) = rootDeclarationProperties {
-            try applyDeclarations(declaration, keys: keys, pass: .ViewConstruction)
+            try applyDeclarations(declaration, keys: keys, pass: .viewConstruction)
         }
 
-        if currentBinding == .ContainerSurrogate {
+        if currentBinding == .containerSurrogate {
             try buildAncestory()
-            try setProperties(.TreeConstruction(context: self))
+            try setProperties(.treeConstruction(context: self))
         }
     }
 
-    public func view<T:UIView>(named name: String) throws -> T {
+    open func view<T:UIView>(named name: String) throws -> T {
         switch viewBindings[name] {
-        case .SpecificView(let view as T)?: return view
-        case .SpecificView(let view)? where !(view is T):
-            throw StageException.InvalidViewType(message: "Unexpected type \(T.self) for view named \(name). Expecting type \(view.dynamicType)", backtrace: [])
+        case .specificView(let view as T)?: return view
+        case .specificView(let view)? where !(view is T):
+            throw StageException.invalidViewType(message: "Unexpected type \(T.self) for view named \(name). Expecting type \(type(of: view))", backtrace: [])
         default:
-            throw StageException.UnknownView(message: "Unknown view \(name) in view hierarchy", backtrace: [])
+            throw StageException.unknownView(message: "Unknown view \(name) in view hierarchy", backtrace: [])
         }
     }
 
-    public func update<T: LiveContextMutator>(@noescape function: T -> ()) throws {
+    open func update<T: LiveContextMutator>(_ function: (T) -> ()) throws {
         let mutator = T(context: self)
         function(mutator)
         try mutator.finalize()
     }
 
-    private func updateChangedKeys(keys: Set<String>) throws {
+    fileprivate func updateChangedKeys(_ keys: Set<String>) throws {
         try stage.declarations.forEach { _, declaration in
-            let intersectingKeys = keys.intersect(declaration.interpolants.keys)
+            let intersectingKeys = keys.intersection(declaration.interpolants.keys)
             try intersectingKeys.forEach { updatedKey in
                 let propertiesUpdated = declaration.interpolants[updatedKey]!
                 do {
-                    try applyDeclarations(declaration, keys: Array(propertiesUpdated), pass: .ViewConstruction)
-                    try applyDeclarations(declaration, keys: Array(propertiesUpdated), pass: .TreeConstruction(context: self))
+                    try applyDeclarations(declaration, keys: Array(propertiesUpdated), pass: .viewConstruction)
+                    try applyDeclarations(declaration, keys: Array(propertiesUpdated), pass: .treeConstruction(context: self))
                 } catch let ex as StageException {
                     throw ex.withBacktraceMessage("while resetting properties in \(declaration.name)")
                 }
@@ -127,48 +127,48 @@ public class StageLiveContext {
         }
     }
 
-    private func buildViewBindings() throws {
+    fileprivate func buildViewBindings() throws {
         do {
             let root = rootDefinition.viewHierarchy!
-            viewBindings[root.name] = .ContainerSurrogate
-            viewBindings[rootDefinition.name] = .ContainerSurrogate
+            viewBindings[root.name] = .containerSurrogate
+            viewBindings[rootDefinition.name] = .containerSurrogate
 
             childQueue.removeAll()
-            childQueue.appendContentsOf(root.children)
+            childQueue.append(contentsOf: root.children)
             var i = 0; while i < childQueue.count {
                 let child = childQueue[i]
-                childQueue.appendContentsOf(child.children)
+                childQueue.append(contentsOf: child.children)
                 i += 1
 
                 if viewBindings[child.name]?.view != nil { continue }
                 let childDefinition = stage.declarations[child.name]
                 let childViewClassName = childDefinition?.propertyMap["class"]?.0 ?? "UIView"
-                // UIViews are Objective-C, so even public Swift implementations will have a value that can be loaded.
-                // As of writing, they can be loaded using a FQN (e.g. MyModule.MyAwesomeView) or via the mangled name.
+
                 var childViewType: AnyClass? = NSClassFromString(childViewClassName)
                 if childViewType == nil {
                     print("Warning. Unable to use class \(childViewClassName) while building view hierarchy. Using UIView")
                     childViewType = UIView.self
                 }
-
-                if !childViewType!.isSubclassOfClass(UIView.self) {
+                if !childViewType!.isSubclass(of: UIView.self) {
                     print("Error. Stage can only build types descending from UIView.",
                           "Refusing to build instance of \(childViewType!)")
                     continue
                 }
-
-                if let childView = StageRuntimeHelpers.makeViewWithClass(childViewType!) {
-                    viewBindings[child.name] = .SpecificView(view: childView)
+                
+                //TODO:
+                // Inject view factories
+                if let childView = StageRuntimeHelpers.makeView(with: childViewType!) {
+                    viewBindings[child.name] = .specificView(view: childView)
                 }
             }
 
-            try setProperties(.ViewConstruction)
+            try setProperties(.viewConstruction)
         } catch let ex as StageException {
             throw ex.withBacktraceMessage("while building views")
         }
     }
 
-    private func buildAncestory() throws {
+    fileprivate func buildAncestory() throws {
         for child in childQueue where child.parent != nil {
             let parent = child.parent!
             if let parentView = viewBindings[parent.name]?.view,
@@ -180,24 +180,24 @@ public class StageLiveContext {
         }
     }
 
-    private typealias PropertyDeclarationKeysTuple = (StageDeclaration, [String])
-    private var childDeclarationsWithProperties: [PropertyDeclarationKeysTuple] {
+    fileprivate typealias PropertyDeclarationKeysTuple = (StageDeclaration, [String])
+    fileprivate var childDeclarationsWithProperties: [PropertyDeclarationKeysTuple] {
         return childQueue.flatMap { child in
             if let childDeclaration = self.stage.declarations[child.name],
                 case let keys = Set(childDeclaration.propertyMap.keys) - Set(["class"])
-                where keys.count > 0 {
+                , keys.count > 0 {
                 return (childDeclaration, Array(keys))
             }
             return nil
         }
     }
-    private var rootDeclarationProperties: PropertyDeclarationKeysTuple? {
+    fileprivate var rootDeclarationProperties: PropertyDeclarationKeysTuple? {
         guard case let keys = Set(rootDefinition.propertyMap.keys) - Set(["class"])
-            where keys.count > 0 else { return nil }
+            , keys.count > 0 else { return nil }
         return (rootDefinition, Array(keys))
     }
 
-    private func setProperties(pass: PropertySetPass) throws {
+    fileprivate func setProperties(_ pass: PropertySetPass) throws {
         var declarationsWithProperties = childDeclarationsWithProperties
         if let rootDeclarationProperties = rootDeclarationProperties {
             declarationsWithProperties.append(rootDeclarationProperties)
@@ -206,29 +206,29 @@ public class StageLiveContext {
             try applyDeclarations(declaration, keys: keys, pass: pass)
         }
     }
-    private func applyDeclarations(declaration: StageDeclaration, keys: [String], pass: PropertySetPass) throws {
+    fileprivate func applyDeclarations(_ declaration: StageDeclaration, keys: [String], pass: PropertySetPass) throws {
         guard let view = self.viewBindings[declaration.name]?.view else {
             return
         }
-        let chain = StageRuntimeHelpers.inheritanceChainRegistries(for: view)
+        let chain = stage.propertyRegistrar.registry(for: view)
         try keys.forEach { key in
-            if let (propertyText, startingLine) = declaration.interpolatedProperty(key, dataBinding: dataBindings) {
+            if let (propertyText, startingLine) = declaration.interpolatedProperty(key: key, dataBinding: dataBindings) {
                 let scanner = StageRuleScanner(string: propertyText)
-                scanner.charactersToBeSkipped = .whitespaceCharacterSet()
+                scanner.charactersToBeSkipped = .whitespaces
                 scanner.startingLine = startingLine
 
                 var handled = false
-                for registration in chain where registration is StagePropertyRegistration && !handled {
-                    let registration = registration as! StagePropertyRegistration
+                for registration in chain where !handled {
+                    let registration = registration
                     do {
                         try registration.receive(property: key, scanner: scanner, view: view, pass: pass)
                         handled = true
-                    } catch StageException.UnhandledProperty {
+                    } catch StageException.unhandledProperty {
                     }
                 }
                 if !handled {
-                    throw StageException.UnhandledProperty(
-                        message: "Property '\(key)' has no setter registered in any superclass of \(view.dynamicType)",
+                    throw StageException.unhandledProperty(
+                        message: "Property '\(key)' has no setter registered in any superclass of \(type(of: view))",
                         line: startingLine,
                         backtrace: ["while setting properties for \(declaration.name)"])
                 }

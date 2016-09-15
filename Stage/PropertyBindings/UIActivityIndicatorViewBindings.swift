@@ -21,42 +21,42 @@
 
 import Foundation
 
-private var propertyTable = {
-    return tap(StagePropertyRegistration()) {
-        let LongLived = $0
-        $0.register("activityIndicatorViewStyle") { scanner in try UIActivityIndicatorViewStyle.create(using: scanner) }
-            .apply { (view: UIActivityIndicatorView, value) in view.activityIndicatorViewStyle = value }
-        $0.register("color") { scanner in try UIColor.create(using: scanner) }
-            .apply { (view: UIActivityIndicatorView, value) in view.color = value }
-
-        $0.register("hidesWhenStopped") { scanner in try scanner.scanBool() }
-            .apply { (view: UIActivityIndicatorView, value) in view.hidesWhenStopped = value }
-        $0.register("startsWhenShown") { scanner in try scanner.scanBool() }
-            .apply { (view: UIActivityIndicatorView, value) in
-                view.stageState.startsWhenShown = value
-                if !view.hidden && !view.isAnimating() { view.startAnimating() }
+public extension StageRegister {
+    public class func ActivityIndicatorView(_ registration: StagePropertyRegistration) {
+        tap(registration) {
+            $0.register("activityIndicatorViewStyle") { scanner in try UIActivityIndicatorViewStyle.create(using: scanner) }
+                .apply { (view: UIActivityIndicatorView, value) in view.activityIndicatorViewStyle = value }
+            $0.register("color") { scanner in try UIColor.create(using: scanner) }
+                .apply { (view: UIActivityIndicatorView, value) in view.color = value }
+            
+            $0.register("hidesWhenStopped") { scanner in try scanner.scanBool() }
+                .apply { (view: UIActivityIndicatorView, value) in view.hidesWhenStopped = value }
+            $0.register("startsWhenShown") { scanner in try scanner.scanBool() }
+                .apply { (view: UIActivityIndicatorView, value) in
+                    view.stageState.startsWhenShown = value
+                    if !view.isHidden && !view.isAnimating { view.startAnimating() }
+            }
         }
     }
-}()
+}
 public extension UIActivityIndicatorView {
     @objc class UIActivityIndicatorViewStageState: NSObject {
         static var AssociationKey = 0
         weak var owner: UIActivityIndicatorView?
         var startsWhenShown: Bool = false
-
+        
         init(owner: UIActivityIndicatorView) {
             super.init()
             self.owner = owner
-            StageSafeKVO.observer(self, watchKey: "hidden", inObject: owner) { [weak self] _, _, _ in
+            StageSafeKVO.observer(self, watchKey: "hidden", in: owner) { [weak self] _, _, _ in
                 guard let this = self, let owner = this.owner else { return }
-                if !owner.hidden && !owner.isAnimating() && this.startsWhenShown {
+                if !owner.isHidden && !owner.isAnimating && this.startsWhenShown {
                     owner.startAnimating()
                 }
             }
         }
     }
-
-    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
+    
     var stageState : UIActivityIndicatorViewStageState {
         if let state = associatedObject(key: &UIActivityIndicatorViewStageState.AssociationKey) as? UIActivityIndicatorViewStageState { return state }
         let state = UIActivityIndicatorViewStageState(owner: self)

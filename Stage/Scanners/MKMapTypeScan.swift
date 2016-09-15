@@ -23,10 +23,10 @@ import Foundation
 import MapKit
 
 public extension MKMapType {
-    private static let nameMap: [String: MKMapType] = {
-        [ "standard": .Standard,
-          "satellite": .Satellite,
-          "hybrid": .Hybrid ]
+    fileprivate static let nameMap: [String: MKMapType] = {
+        [ "standard": .standard,
+          "satellite": .satellite,
+          "hybrid": .hybrid ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> MKMapType {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

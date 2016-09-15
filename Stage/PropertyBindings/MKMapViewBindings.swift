@@ -22,28 +22,27 @@
 import Foundation
 import MapKit
 
-private var propertyTable = {
-    return tap(StagePropertyRegistration()) {
-        $0.register("pitchEnabled") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.pitchEnabled = value }
-        $0.register("rotateEnabled") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.rotateEnabled = value }
-        $0.register("scrollEnabled") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.scrollEnabled = value }
-        $0.register("zoomEnabled") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.zoomEnabled = value }
-
-        $0.register("showsPointsOfInterest") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.showsPointsOfInterest = value }
-        $0.register("showsBuildings") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.showsBuildings = value }
-        $0.register("showsUserLocation") { scanner in try scanner.scanBool() }
-            .apply { (view: MKMapView, value) in view.showsUserLocation = value }
-
-        $0.register("mapType") { scanner in try MKMapType.create(using: scanner) }
-            .apply { (view: MKMapView, value) in view.mapType = value }
+public extension StageRegister {
+    public class func MapView(_ registration: StagePropertyRegistration) {
+        tap(registration) {
+            $0.register("pitchEnabled") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.isPitchEnabled = value }
+            $0.register("rotateEnabled") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.isRotateEnabled = value }
+            $0.register("scrollEnabled") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.isScrollEnabled = value }
+            $0.register("zoomEnabled") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.isZoomEnabled = value }
+            
+            $0.register("showsPointsOfInterest") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.showsPointsOfInterest = value }
+            $0.register("showsBuildings") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.showsBuildings = value }
+            $0.register("showsUserLocation") { scanner in try scanner.scanBool() }
+                .apply { (view: MKMapView, value) in view.showsUserLocation = value }
+            
+            $0.register("mapType") { scanner in try MKMapType.create(using: scanner) }
+                .apply { (view: MKMapView, value) in view.mapType = value }
+        }
     }
-}()
-public extension MKMapView {
-    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
 }

@@ -31,12 +31,12 @@ public extension UIFont {
         } else {
             needSize = true
         }
-        let name = try scanner.scanUpToCharactersFromSet(.whitespaceCharacterSet())
-        if needSize {
-            finalSize = CGFloat((try? scanner.scanNSNumber())?.floatValue ?? defaultPointSize)
+        let name = try scanner.scanCharacters(from: .nonwhitespaceCharacterSet())
+        if needSize, let f = try? scanner.scanNSNumber().floatValue {
+            finalSize = CGFloat(f)
         }
         if let font = UIFont(name: name, size: finalSize) { return font }
-        throw StageException.UnrecognizedContent(
+        throw StageException.unrecognizedContent(
             message: "Unable to create font for name: \(name) size: \(finalSize)",
             line: scanner.startingLine,
             backtrace: [])

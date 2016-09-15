@@ -21,17 +21,16 @@
 
 import Foundation
 
-private var propertyTable = {
-    return tap(StagePropertyRegistration()) {
-        $0.register("items") { scanner in try scanner.scanList(scanner.scanUpToString(",")) }
-            .apply { (view: UISegmentedControl, value) in
-                view.removeAllSegments()
-                value.forEach { segmentText in
-                    view.insertSegmentWithTitle(segmentText, atIndex: view.numberOfSegments, animated: false)
-                }
+public extension StageRegister {
+    public class func SegmentControl(_ registration: StagePropertyRegistration) {
+        tap(registration) {
+            $0.register("items") { scanner in try scanner.scanList(itemScan: scanner.scanUpTo(string: ",")) }
+                .apply { (view: UISegmentedControl, value) in
+                    view.removeAllSegments()
+                    value.forEach { segmentText in
+                        view.insertSegment(withTitle: segmentText, at: view.numberOfSegments, animated: false)
+                    }
+            }
         }
     }
-}()
-public extension UISegmentedControl {
-    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
 }

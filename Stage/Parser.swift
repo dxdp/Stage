@@ -25,8 +25,10 @@ import UIKit
 // MARK: - Stage Begin
 
 class StageParser {
+    let propertyRegistrar: PropertyRegistrar
     let errorListener: StageDefinitionErrorListener?
-    init(errorListener: StageDefinitionErrorListener?) {
+    init(propertyRegistrar: PropertyRegistrar, errorListener: StageDefinitionErrorListener?) {
+        self.propertyRegistrar = propertyRegistrar
         self.errorListener = errorListener
     }
 
@@ -39,8 +41,8 @@ class StageParser {
             self.lines = lines
         }
 
-        @warn_unused_result func peekLine() -> String? { return lines[safe: currentPosition] }
-        @warn_unused_result func nextLine() -> String? {
+        func peekLine() -> String? { return lines[safe: currentPosition] }
+        func nextLine() -> String? {
             guard let next = peekLine() else { return nil }
             forward()
             return next
@@ -51,16 +53,16 @@ class StageParser {
     }
 
     static var CommentRemovalRegularExpression = {
-        return try! NSRegularExpression(pattern: "(?:[ \t]*#--.*$|[ \t]+$)", options: .AnchorsMatchLines)
+        return try! NSRegularExpression(pattern: "(?:[ \t]*#--.*$|[ \t]+$)", options: .anchorsMatchLines)
     }()
-    func preprocessLine(text: String) -> String {
+    func preprocessLine(_ text: String) -> String {
         let regex = StageParser.CommentRemovalRegularExpression
-        return regex.stringByReplacingMatchesInString(text, options: .Anchored, range: text.entireRange, withTemplate: "")
+        return regex.stringByReplacingMatches(in: text, options: .anchored, range: text.entireRange, withTemplate: "")
     }
 
-    func parse(lines: [String], identifier: String? = nil) throws -> StageDefinition {
+    func parse(_ lines: [String], identifier: String? = nil) throws -> StageDefinition {
         let parseContext = Context(lines: lines.map { preprocessLine($0) })
-        let stageDefinition = StageDefinition(errorListener: errorListener)
+        let stageDefinition = StageDefinition(propertyRegistrar: propertyRegistrar, errorListener: errorListener)
         stageDefinition.debugIdentifier = identifier ?? ""
         while let line = parseContext.nextLine() {
             if line.isEmpty { continue }
@@ -72,7 +74,7 @@ class StageParser {
                     throw ex.withBacktraceMessage("while parsing declaration on line \(lineNumber)")
                 }
             } else {
-                throw StageException.UnrecognizedContent(
+                throw StageException.unrecognizedContent(
                     message: "Unrecognized plain text. Add ':' to the end to make a declaration",
                     line: parseContext.currentLine,
                     backtrace: [])
@@ -82,13 +84,13 @@ class StageParser {
     }
 
     func parse(declaration line: String, into stageDefinition: StageDefinition, context: Context) throws {
-        let declarationNames = line.substringToIndex(line.endIndex.predecessor())
-        let allNames = declarationNames.componentsSeparatedByString(",").map { $0.trimmed() }
+        let declarationNames = line.substring(to: line.index(before: line.endIndex))
+        let allNames = declarationNames.components(separatedBy: ",").map { $0.trimmed() }
         var rules = [(String, Int)]()
-        while let nextRule = context.peekLine() where !nextRule.hasSuffix(":") {
+        while let nextRule = context.peekLine(), !nextRule.hasSuffix(":") {
             let lineNumber = context.currentLine
             context.forward()
-            if case let trimmed = nextRule.trimmed() where trimmed.isEmpty { continue }
+            if case let trimmed = nextRule.trimmed() , trimmed.isEmpty { continue }
             rules.append((nextRule, lineNumber))
         }
         try allNames.forEach { name in
@@ -100,11 +102,11 @@ class StageParser {
         }
     }
 
-    func parse(rules rules: [(String, Int)], into stageDefinition: StageDefinition, name: String) throws {
+    func parse(rules: [(String, Int)], into stageDefinition: StageDefinition, name: String) throws {
         guard rules.count > 0 else { return }
 
         let interpreter: StageDeclarationInterpreter
-        if let x = rules.first?.0.trimmed() where x.hasPrefix(".") {
+        if let x = rules.first?.0.trimmed() , x.hasPrefix(".") {
             interpreter = PropertySettersInterpreter()
         } else {
             interpreter = ViewHierarchyInterpreter()
@@ -112,11 +114,11 @@ class StageParser {
 
         try rules.forEach { text, lineNumber in
             do {
-                try interpreter.next(text, lineNumber: lineNumber)
+                try interpreter.next(text: text, lineNumber: lineNumber)
             } catch let ex as StageException {
                 throw ex.withBacktraceMessage("while parsing rule for declaration \(name)")
             }
         }
-        interpreter.amend(stageDefinition[name])
+        interpreter.amend(declaration: stageDefinition[name])
     }
 }

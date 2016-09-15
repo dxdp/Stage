@@ -25,7 +25,7 @@ public extension UIEdgeInsets {
     public static func create(using scanner: StageRuleScanner) throws -> UIEdgeInsets {
         let dims = try scanner.scanBracedList(open: "{", close: "}", itemScan: scanner.scanCGFloat())
         guard dims.count == 4 else {
-            throw StageException.UnrecognizedContent(
+            throw StageException.unrecognizedContent(
                 message: "Expected edge insets to be in format: {top, left, bottom, right}, but saw \(scanner.string)",
                 line: scanner.startingLine,
                 backtrace: [])

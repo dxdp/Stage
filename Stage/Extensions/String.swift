@@ -23,15 +23,15 @@ import Foundation
 
 extension String {
     var leadingIndent: Int {
-        if let range = rangeOfCharacterFromSet(.nonwhitespaceCharacterSet()) {
-            return characters.startIndex.distanceTo(range.startIndex)
+        if let range = rangeOfCharacter(from: .nonwhitespaceCharacterSet()) {
+            return characters.distance(from: characters.startIndex, to: range.lowerBound)
         }
         return characters.count
     }
 
     var trailingIndent: Int {
-        if let range = rangeOfCharacterFromSet(.nonwhitespaceCharacterSet(), options: .BackwardsSearch) {
-            return range.startIndex.distanceTo(endIndex)
+        if let range = rangeOfCharacter(from: .nonwhitespaceCharacterSet(), options: .backwards) {
+            return characters.distance(from: range.lowerBound, to: endIndex)
         }
         return characters.count
     }
@@ -41,16 +41,16 @@ extension String {
     }
 
     func trimmed() -> String {
-        return stringByTrimmingCharactersInSet(.whitespaceCharacterSet())
+        return trimmingCharacters(in: .whitespaces)
     }
 
     func leftTrimmed() -> String {
         let indent = leadingIndent
-        return indent < characters.count ? substringFromIndex(startIndex.advancedBy(indent)) : ""
+        return indent < characters.count ? substring(from: characters.index(startIndex, offsetBy: indent)) : ""
     }
 
     func rightTrimmed() -> String {
         let indent = trailingIndent
-        return indent < characters.count ? substringToIndex(endIndex.advancedBy(-indent)) : ""
+        return indent < characters.count ? substring(to: characters.index(endIndex, offsetBy: -indent)) : ""
     }
 }

@@ -44,30 +44,30 @@ private var constraintParseExpression = { () -> NSRegularExpression in
                    "(?:", item, "\\.", attribute, skipSpace, ")?",                  // 3 = item, 4 = attribute
                    "(?:", multiOp, skipSpace, number, skipSpace, ")?",              // 5 = multiOp, 6 = number
                    "(?:", constOp, skipSpace, ")?", number, "?", skipSpace, "$"]    // 7 = constOpt, 8 = number
-        .joinWithSeparator("")
+        .joined(separator: "")
     return try! NSRegularExpression(pattern: pattern, options: .init(rawValue: 0))
 }()
 
 public extension StageRuleScanner {
 
     public func scanStageLayoutConstraints() throws -> [StageLayoutConstraint] {
-        let constraints = string.componentsSeparatedByString("\n").enumerate().flatMap { lineNumber, line -> StageLayoutConstraint? in
+        let constraints = string.components(separatedBy: "\n").enumerated().flatMap { lineNumber, line -> StageLayoutConstraint? in
             let currentLine = startingLine + lineNumber
             if line.isEmpty { return nil }
-            let matches = constraintParseExpression.matchesInString(line, options: .init(rawValue: 0), range: line.entireRange)
-            guard case let match = matches[0] where matches.count == 1 else {
+            let matches = constraintParseExpression.matches(in: line, options: .init(rawValue: 0), range: line.entireRange)
+            guard case let match = matches[0], matches.count == 1 else {
                 print("Skipping layout attribute line '\(line)'",
                     "It does not appear to be in the required format. Did you use '=' instead of '=='?",
                     separator: "\n")
                 return nil
             }
 
-            func captureGroup(n: Int) -> String? {
+            func captureGroup(_ n: Int) -> String? {
                 guard n < match.numberOfRanges else { return nil }
-                guard case let range = match.rangeAtIndex(n) where range.location != NSNotFound else { return nil }
-                let start = line.startIndex.advancedBy(range.location)
-                let end = start.advancedBy(range.length)
-                return line.substringWithRange(start..<end)
+                guard case let range = match.rangeAt(n), range.location != NSNotFound else { return nil }
+                let start = line.index(line.startIndex, offsetBy: range.location)
+                let end = line.index(start, offsetBy: range.length)
+                return line.substring(with: start..<end)
             }
 
             // The first two groups are not optional, so to match they must also exist. This implies we can unwrap them immediately
@@ -80,14 +80,14 @@ public extension StageRuleScanner {
             let addOpText           = captureGroup(7)
             let addendText          = captureGroup(8)
 
-            func scanner(text: String) -> StageRuleScanner { return StageRuleScanner(string: text) }
+            func scanner(_ text: String) -> StageRuleScanner { return StageRuleScanner(string: text) }
             func selfAttribute() throws -> NSLayoutAttribute { return try NSLayoutAttribute.create(using: scanner(selfAttributeText)) }
             func relation() throws -> NSLayoutRelation { return try NSLayoutRelation.create(using: scanner(relationText)) }
             func targetAttribute() throws -> NSLayoutAttribute {
                 switch (targetText, targetAttributeText) {
-                case (let x, let y) where x == nil && y == nil: return .NotAnAttribute
+                case (let x, let y) where x == nil && y == nil: return .notAnAttribute
                 case (let x, let y) where x != nil && y != nil: return try NSLayoutAttribute.create(using: scanner(targetAttributeText!))
-                default: throw StageException.UnrecognizedContent(
+                default: throw StageException.unrecognizedContent(
                     message: "Failed to parse target and attribute",
                     line: currentLine,
                     backtrace: [])
@@ -96,7 +96,7 @@ public extension StageRuleScanner {
             func multiplier() throws -> CGFloat {
                 guard let multiplyOpText = multiplyOpText else { return 1 }
                 guard let multiplyFactorText = multiplyFactorText else {
-                    throw StageException.UnrecognizedContent(
+                    throw StageException.unrecognizedContent(
                         message: "Layout attribute multiplication specified without a factor",
                         line: currentLine,
                         backtrace: [])
@@ -104,7 +104,7 @@ public extension StageRuleScanner {
                 var factor = try scanner(multiplyFactorText).scanCGFloat()
                 if multiplyOpText == "/" {
                     if abs(factor) < 0.00001 {
-                        throw StageException.UnrecognizedContent(
+                        throw StageException.unrecognizedContent(
                             message: "Ignoring layout due to division of zero",
                             line: currentLine,
                             backtrace: [])
@@ -116,13 +116,13 @@ public extension StageRuleScanner {
             func constant() throws -> CGFloat {
                 guard let addendText = addendText else { return 0 }
                 if addOpText == nil && targetText != nil {
-                    throw StageException.UnrecognizedContent(
+                    throw StageException.unrecognizedContent(
                         message: "Missing add operator (+ or -) between target and constant",
                         line: currentLine,
                         backtrace: [])
                 }
                 var value = try scanner(addendText).scanCGFloat()
-                if let addOpText = addOpText where addOpText == "-" {
+                if let addOpText = addOpText, addOpText == "-" {
                     value = -value
                 }
                 return value

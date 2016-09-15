@@ -32,7 +32,7 @@ class StageViewHierarchyNode {
         self.indentLevel = indentLevel
     }
 
-    func addChild(name: String, indentLevel: Int) -> StageViewHierarchyNode {
+    func addChild(_ name: String, indentLevel: Int) -> StageViewHierarchyNode {
         assert(indentLevel > self.indentLevel)
         let subnode = StageViewHierarchyNode(name: name, indentLevel: indentLevel)
         subnode.parent = self

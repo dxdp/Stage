@@ -22,12 +22,12 @@
 import Foundation
 
 public extension NSTextAlignment {
-    private static let nameMap : [String: NSTextAlignment] = {
-        [ "left": .Left,
-          "center": .Center,
-          "right": .Right,
-          "justified": .Justified,
-          "natural": .Natural ]
+    fileprivate static let nameMap : [String: NSTextAlignment] = {
+        [ "left": .left,
+          "center": .center,
+          "right": .right,
+          "justified": .justified,
+          "natural": .natural ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> NSTextAlignment {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

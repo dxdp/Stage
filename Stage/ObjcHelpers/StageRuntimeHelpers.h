@@ -22,12 +22,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@class StagePropertyRegistration;
+
 @interface StageRuntimeHelpers : NSObject
-
 + (nullable UIView*)makeViewWithClass:(nonnull Class)cls;
-
-+ (nonnull NSArray*)inheritanceChainRegistriesForView:(nonnull UIView*)view
-    NS_SWIFT_NAME(inheritanceChainRegistries(for:));
-
 + (void)loadReveal;
 @end

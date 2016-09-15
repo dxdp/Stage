@@ -22,11 +22,11 @@
 import Foundation
 
 public extension UIControlContentHorizontalAlignment {
-    private static let nameMap : [String: UIControlContentHorizontalAlignment] = {
-        [ "left": .Left,
-          "right": .Right,
-          "center": .Center,
-          "fill": .Fill ]
+    fileprivate static let nameMap : [String: UIControlContentHorizontalAlignment] = {
+        [ "left": .left,
+          "right": .right,
+          "center": .center,
+          "fill": .fill ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIControlContentHorizontalAlignment {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
@@ -34,11 +34,11 @@ public extension UIControlContentHorizontalAlignment {
 }
 
 public extension UIControlContentVerticalAlignment {
-    private static let nameMap : [String: UIControlContentVerticalAlignment] = {
-        [ "top": .Top,
-          "bottom": .Bottom,
-          "center": .Center,
-          "fill": .Fill ]
+    fileprivate static let nameMap : [String: UIControlContentVerticalAlignment] = {
+        [ "top": .top,
+          "bottom": .bottom,
+          "center": .center,
+          "fill": .fill ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIControlContentVerticalAlignment {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

@@ -22,27 +22,27 @@
 import Foundation
 
 public extension NSLayoutAttribute {
-    private static let nameMap : [String: NSLayoutAttribute] = {
-        [ "left": .Left,
-          "right": .Right,
-          "top": .Top,
-          "bottom": .Bottom,
-          "leading": .Leading,
-          "trailing": .Trailing,
-          "width": .Width,
-          "height": .Height,
-          "centerx": .CenterX,
-          "centery": .CenterY,
-          "baseline": .Baseline,
-          "firstbaseline": .FirstBaseline,
-          "leftmargin": .LeftMargin,
-          "rightmargin": .RightMargin,
-          "topmargin": .TopMargin,
-          "bottommargin": .BottomMargin,
-          "leadingmargin": .LeadingMargin,
-          "trailingmargin": .TrailingMargin,
-          "centerxwithinmargins": .CenterXWithinMargins,
-          "centerywithinmargins": .CenterYWithinMargins ]
+    fileprivate static let nameMap : [String: NSLayoutAttribute] = {
+        [ "left": .left,
+          "right": .right,
+          "top": .top,
+          "bottom": .bottom,
+          "leading": .leading,
+          "trailing": .trailing,
+          "width": .width,
+          "height": .height,
+          "centerx": .centerX,
+          "centery": .centerY,
+          "baseline": .lastBaseline,
+          "firstbaseline": .firstBaseline,
+          "leftmargin": .leftMargin,
+          "rightmargin": .rightMargin,
+          "topmargin": .topMargin,
+          "bottommargin": .bottomMargin,
+          "leadingmargin": .leadingMargin,
+          "trailingmargin": .trailingMargin,
+          "centerxwithinmargins": .centerXWithinMargins,
+          "centerywithinmargins": .centerYWithinMargins ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> NSLayoutAttribute {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
@@ -50,12 +50,12 @@ public extension NSLayoutAttribute {
 }
 
 public extension NSLayoutRelation {
-    private static let nameMap : [String: NSLayoutRelation] = {
-        [ "==": .Equal,
-          "<=": .LessThanOrEqual,
-          ">=": .GreaterThanOrEqual ]
+    fileprivate static let nameMap : [String: NSLayoutRelation] = {
+        [ "==": .equal,
+          "<=": .lessThanOrEqual,
+          ">=": .greaterThanOrEqual ]
     }()
-    private static let nameCharacterSet: NSCharacterSet = { NSCharacterSet(charactersInString: "<=>") }()
+    fileprivate static let nameCharacterSet: CharacterSet = { CharacterSet(charactersIn: "<=>") }()
     public static func create(using scanner: StageRuleScanner) throws -> NSLayoutRelation {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine, characterSet: nameCharacterSet).scan(using: scanner)
     }

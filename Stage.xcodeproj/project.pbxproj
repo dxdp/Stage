@@ -63,6 +63,8 @@
 		04D3B64F1D52B244002800F0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B64E1D52B244002800F0 /* UIView.swift */; };
 		04D3B6541D52B420002800F0 /* StackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6531D52B420002800F0 /* StackingView.swift */; };
 		04D3B6561D53B7D4002800F0 /* StackingViewBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */; };
+		13650EE81D89EC8E0085D8E0 /* PropertyRegistrar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13650EE71D89EC8E0085D8E0 /* PropertyRegistrar.swift */; };
+		13650EEA1D8B13540085D8E0 /* LoadDefaultBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13650EE91D8B13540085D8E0 /* LoadDefaultBindings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +126,8 @@
 		04D3B64E1D52B244002800F0 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		04D3B6531D52B420002800F0 /* StackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingView.swift; sourceTree = "<group>"; };
 		04D3B6551D53B7D4002800F0 /* StackingViewBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackingViewBindings.swift; sourceTree = "<group>"; };
+		13650EE71D89EC8E0085D8E0 /* PropertyRegistrar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyRegistrar.swift; sourceTree = "<group>"; };
+		13650EE91D8B13540085D8E0 /* LoadDefaultBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDefaultBindings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +174,7 @@
 				044898931D4FCD330026F43A /* LiveContext.swift */,
 				044898941D4FCD330026F43A /* Mapper.swift */,
 				044898D51D4FCEA80026F43A /* Parser.swift */,
+				13650EE71D89EC8E0085D8E0 /* PropertyRegistrar.swift */,
 				044898A61D4FCD330026F43A /* PropertyRegistration.swift */,
 				044898AF1D4FCD330026F43A /* Utilities.swift */,
 				044898B01D4FCD330026F43A /* ViewBinding.swift */,
@@ -198,6 +203,7 @@
 		0448989E1D4FCD330026F43A /* PropertyBindings */ = {
 			isa = PBXGroup;
 			children = (
+				13650EE91D8B13540085D8E0 /* LoadDefaultBindings.swift */,
 				0448989F1D4FCD330026F43A /* MKMapViewBindings.swift */,
 				0456F1D41D5A5100005F8326 /* UIActivityIndicatorViewBindings.swift */,
 				0456F1D61D5A523C005F8326 /* UIButtonBindings.swift */,
@@ -205,10 +211,10 @@
 				044898A01D4FCD330026F43A /* UILabelBindings.swift */,
 				044898A11D4FCD330026F43A /* UIScrollViewBindings.swift */,
 				044898A21D4FCD330026F43A /* UISegmentedControlBindings.swift */,
+				0456F1D01D59539B005F8326 /* UISwitchBindings.swift */,
 				044898A31D4FCD330026F43A /* UITextFieldBindings.swift */,
 				044898A41D4FCD330026F43A /* UITextViewBindings.swift */,
 				044898A51D4FCD330026F43A /* UIViewBindings.swift */,
-				0456F1D01D59539B005F8326 /* UISwitchBindings.swift */,
 			);
 			path = PropertyBindings;
 			sourceTree = "<group>";
@@ -299,11 +305,12 @@
 		044898741D4FCCDB0026F43A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = deep;
 				TargetAttributes = {
 					0448987C1D4FCCDB0026F43A = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -355,6 +362,7 @@
 				044898C41D4FCD330026F43A /* UISegmentedControlBindings.swift in Sources */,
 				0456F1BF1D590D5A005F8326 /* MKMapTypeScan.swift in Sources */,
 				044898BA1D4FCD330026F43A /* NSObject+Stage.m in Sources */,
+				13650EEA1D8B13540085D8E0 /* LoadDefaultBindings.swift in Sources */,
 				0456F1C71D590F1F005F8326 /* UIActivityIndicatorViewStyleScan.swift in Sources */,
 				044898C11D4FCD330026F43A /* MKMapViewBindings.swift in Sources */,
 				044898B81D4FCD330026F43A /* Mapper.swift in Sources */,
@@ -390,6 +398,7 @@
 				0469CED91D6CC3C100B25109 /* String.swift in Sources */,
 				0456F1D71D5A523C005F8326 /* UIButtonBindings.swift in Sources */,
 				044898B31D4FCD330026F43A /* DefaultDefinitionFactory.swift in Sources */,
+				13650EE81D89EC8E0085D8E0 /* PropertyRegistrar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,8 +419,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -459,8 +470,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -480,6 +493,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -491,6 +505,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -502,6 +517,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -509,6 +525,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -519,6 +536,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.deep.Stage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

@@ -22,11 +22,11 @@
 import Foundation
 
 public extension UITextFieldViewMode {
-    private static let nameMap : [String: UITextFieldViewMode] = {
-        [ "never": .Never,
-          "whileediting": .WhileEditing,
-          "unlessediting": .UnlessEditing,
-          "always": .Always ]
+    fileprivate static let nameMap : [String: UITextFieldViewMode] = {
+        [ "never": .never,
+          "whileediting": .whileEditing,
+          "unlessediting": .unlessEditing,
+          "always": .always ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UITextFieldViewMode {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

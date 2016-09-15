@@ -23,8 +23,8 @@ import Foundation
 
 extension StackingDirection {
     static var nameMap: [String: StackingDirection] = {
-        [ "horizontal": .Horizontal,
-          "vertical": .Vertical ]
+        [ "horizontal": .horizontal,
+          "vertical": .vertical ]
     }()
     static func create(using scanner: StageRuleScanner) throws -> StackingDirection {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
@@ -33,31 +33,30 @@ extension StackingDirection {
 
 extension StackingAlignment {
     static var nameMap: [String: StackingAlignment] = {
-        [ "first": .AlignFirst,
-          "last": .AlignLast,
-          "both": .AlignBoth,
-          "neither": .AlignNeither]
+        [ "first": .alignFirst,
+          "last": .alignLast,
+          "both": .alignBoth,
+          "neither": .alignNeither]
     }()
     static func create(using scanner: StageRuleScanner) throws -> StackingAlignment {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
     }
 }
 
-private var propertyTable = {
-    tap(StagePropertyRegistration()) {
-        $0.register("contentInset") { scanner in try UIEdgeInsets.create(using: scanner) }
-            .apply { (view: StackingView, value) in view.contentInset = value }
+public extension StageRegister {
+    public class func stgStackingView(_ registration: StagePropertyRegistration) {
+        tap(registration) {
+            $0.register("contentInset") { scanner in try UIEdgeInsets.create(using: scanner) }
+                .apply { (view: StackingView, value) in view.contentInset = value }
 
-        $0.register("spacing") { scanner in try scanner.scanCGFloat() }
-            .apply { (view: StackingView, value) in view.spacing = value }
+            $0.register("spacing") { scanner in try scanner.scanCGFloat() }
+                .apply { (view: StackingView, value) in view.spacing = value }
 
-        $0.register("stackingAlignment") { scanner in try StackingAlignment.create(using: scanner) }
-            .apply { (view: StackingView, value) in view.stackingAlignment = value }
+            $0.register("stackingAlignment") { scanner in try StackingAlignment.create(using: scanner) }
+                .apply { (view: StackingView, value) in view.stackingAlignment = value }
 
-        $0.register("stackingDirection") { scanner in try StackingDirection.create(using: scanner) }
-            .apply { (view: StackingView, value) in view.stackingDirection = value }
+            $0.register("stackingDirection") { scanner in try StackingDirection.create(using: scanner) }
+                .apply { (view: StackingView, value) in view.stackingDirection = value }
+        }
     }
-}()
-public extension StackingView {
-    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
 }

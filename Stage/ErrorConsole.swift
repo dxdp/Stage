@@ -23,28 +23,28 @@ import Foundation
 import UIKit
 
 final class ErrorConsoleWindow: UIWindow {
-    private weak var restoreWindow: UIWindow?
-    override var hidden: Bool {
+    fileprivate weak var restoreWindow: UIWindow?
+    override var isHidden: Bool {
         didSet {
-            if hidden {
+            if isHidden {
                 if let restoreWindow = restoreWindow { restoreWindow.makeKeyAndVisible() }
                 rootViewController = nil
                 restoreWindow = nil
             }
             else {
                 rootViewController = ErrorConsoleRootViewController()
-                restoreWindow = UIApplication.sharedApplication().keyWindow
+                restoreWindow = UIApplication.shared.keyWindow
                 if let window = restoreWindow {
                     if window == self { restoreWindow = nil }
-                    restoreWindow?.hidden = true
+                    restoreWindow?.isHidden = true
                 }
             }
         }
     }
 
-    override func becomeKeyWindow() {
+    override func becomeKey() {
         rootViewController = ErrorConsoleRootViewController()
-        super.becomeKeyWindow()
+        super.becomeKey()
     }
 
     override init(frame: CGRect) {
@@ -57,15 +57,15 @@ final class ErrorConsoleWindow: UIWindow {
     }
 }
 
-public class ErrorConsole : StageDefinitionErrorListener {
-    let window = ErrorConsoleWindow(frame: UIScreen.mainScreen().bounds)
+open class ErrorConsole : StageDefinitionErrorListener {
+    let window = ErrorConsoleWindow(frame: UIScreen.main.bounds)
 
     public init() { }
-    public func error(exception: StageException) {
+    open func error(_ exception: StageException) {
         window.makeKeyAndVisible()
         (window.rootViewController as? ErrorConsoleRootViewController)?.error(exception)
     }
-    public func trap<T>(code: Void throws -> T) -> T? {
+    open func trap<T>(_ code: (Void) throws -> T) -> T? {
         do {
             return try code()
         } catch let ex as StageException {
@@ -76,7 +76,7 @@ public class ErrorConsole : StageDefinitionErrorListener {
     }
 }
 
-public class ErrorConsoleRootViewController: UIViewController, StageDefinitionErrorListener {
+open class ErrorConsoleRootViewController: UIViewController, StageDefinitionErrorListener {
     var messages: [String] = []
     var messagesView: StackingView?
     var definition: StageDefinition?
@@ -84,20 +84,20 @@ public class ErrorConsoleRootViewController: UIViewController, StageDefinitionEr
     init() {
         super.init(nibName: nil, bundle: nil)
         let factory = DefaultDefinitionFactory()
-        definition = try! factory.build(data: errorConsoleDefinition.dataUsingEncoding(NSUTF8StringEncoding)!)
+        definition = try! factory.build(data: errorConsoleDefinition.data(using: String.Encoding.utf8)!)
     }
     public required init?(coder aDecoder: NSCoder) {
         fatalError("Not implemented: \(#function)")
     }
 
-    public override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if isViewLoaded() && motion == .MotionShake {
-            view.window?.hidden = true
+    open override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if isViewLoaded && motion == .motionShake {
+            view.window?.isHidden = true
             view.window?.rootViewController = nil
         }
     }
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
 
         struct Mapping: StageViewMapping {
@@ -106,38 +106,38 @@ public class ErrorConsoleRootViewController: UIViewController, StageDefinitionEr
                 messages = try map.view(named: "MessageStack")
             }
         }
-        let ctxt = try! definition!.load(viewHierarchy: "ErrorConsole") { (mapping: Mapping) in
+        _ = try? definition!.load(viewHierarchy: "ErrorConsole") { (mapping: Mapping) in
             messagesView = mapping.messages
-        }
-        try! ctxt.addAsSubview(of: view)
+        }.addAsSubview(of: view)
     }
 
-    public func error(exception: StageException) {
+    open func error(_ exception: StageException) {
         let backtrace: [String], consoleMessage: String
         switch exception {
-        case .InvalidViewType(let message, let bt):
+        case .invalidViewType(let message, let bt):
             consoleMessage = "Invalid view type\n\(message)"
             backtrace = bt
-        case .ResourceNotAvailable(let name, let message, let bt):
+        case .resourceNotAvailable(let name, let message, let bt):
             consoleMessage = "Resource not available: \(name)\n\(message)"
             backtrace = bt
-        case .UnhandledProperty(let message, let line, let bt):
+        case .unhandledProperty(let message, let line, let bt):
             consoleMessage = "Unhandled property on line \(line)\n\(message)"
             backtrace = bt
-        case .UnknownView(let message, let bt):
+        case .unknownView(let message, let bt):
             consoleMessage = "Unknown view\n\(message)"
             backtrace = bt
-        case .UnknownViewHierarchy(let message, let bt):
+        case .unknownViewHierarchy(let message, let bt):
             consoleMessage = "Unknown view hierarchy\n\(message)"
             backtrace = bt
-        case .UnrecognizedContent(let message, let line, let bt):
+        case .unrecognizedContent(let message, let line, let bt):
             consoleMessage = "Unrecognized content on line \(line)\n\(message)"
             backtrace = bt
-        case .InvalidDataEncoding(let bt):
+        case .invalidDataEncoding(let bt):
             consoleMessage = "\(exception)"
             backtrace = bt
         }
-        messages.append("\(consoleMessage)\n\(backtrace.map { "  ...\($0)" }.joinWithSeparator("\n"))")
+        let messageContainer = messagesView ?? UIView()
+        messages.append("\(consoleMessage)\n\(backtrace.map { "  ...\($0)" }.joined(separator: "\n"))")
         messagesView?.removeAllSubviews()
         messages.forEach { msg in
             struct Mapping: StageViewMapping {
@@ -146,9 +146,9 @@ public class ErrorConsoleRootViewController: UIViewController, StageDefinitionEr
                     label = try map.view(named: "Message")
                 }
             }
-            try! definition!.load(viewHierarchy: "MessageViewHierarchy") { (mapping: Mapping) in
+            _ = try? definition!.load(viewHierarchy: "MessageViewHierarchy") { (mapping: Mapping) in
                 mapping.label.text = msg
-            }.addAsSubview(of: messagesView!)
+            }.addAsSubview(of: messageContainer)
         }
     }
 }
@@ -204,4 +204,4 @@ let errorConsoleDefinition: String = { [
     "  .numberOfLines = 0",
     "  .layoutAttributes =",
     "",
-].joinWithSeparator("\n") }()
+].joined(separator: "\n") }()

@@ -22,18 +22,18 @@
 import Foundation
 
 public extension UIKeyboardType {
-    private static let nameMap : [String: UIKeyboardType] = {
-        [ "default": .Default,
-          "asciicapable": .ASCIICapable,
-          "numbersandpunctuation": .NumbersAndPunctuation,
+    fileprivate static let nameMap : [String: UIKeyboardType] = {
+        [ "default": .default,
+          "asciicapable": .asciiCapable,
+          "numbersandpunctuation": .numbersAndPunctuation,
           "url": .URL,
-          "numberpad": .NumberPad,
-          "phonepad": .PhonePad,
-          "namephonepad": .NamePhonePad,
-          "emailaddress": .EmailAddress,
-          "decimalpad": .DecimalPad,
-          "twitter": .Twitter,
-          "websearch": .WebSearch ]
+          "numberpad": .numberPad,
+          "phonepad": .phonePad,
+          "namephonepad": .namePhonePad,
+          "emailaddress": .emailAddress,
+          "decimalpad": .decimalPad,
+          "twitter": .twitter,
+          "websearch": .webSearch ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIKeyboardType {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

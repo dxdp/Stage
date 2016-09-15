@@ -22,20 +22,20 @@
 import Foundation
 
 enum StageViewBinding: Equatable {
-    case ContainerSurrogate
-    case SpecificView(view: UIView)
+    case containerSurrogate
+    case specificView(view: UIView)
 
     var view: UIView? {
         switch self {
-        case .SpecificView(let view): return view
+        case .specificView(let view): return view
         default: return nil
         }
     }
 }
 func == (left: StageViewBinding, right: StageViewBinding) -> Bool {
     switch (left, right) {
-    case (.ContainerSurrogate, .ContainerSurrogate): return true
-    case (.SpecificView(let v1), .SpecificView(let v2)): return v1 == v2
+    case (.containerSurrogate, .containerSurrogate): return true
+    case (.specificView(let v1), .specificView(let v2)): return v1 == v2
     default: return false
     }
 }

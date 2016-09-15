@@ -35,7 +35,7 @@ class StageDeclaration {
         guard let (propertyText, startingLine) = propertyMap[key] else { return nil }
         var interpolatedText = propertyText
         dataBinding.forEach { key, value in
-            interpolatedText = interpolatedText.stringByReplacingOccurrencesOfString("#{\(key)}", withString: value)
+            interpolatedText = interpolatedText.components(separatedBy: "#{\(key)}").joined(separator: value)
         }
         return (interpolatedText, startingLine)
     }
@@ -54,30 +54,32 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
     var interpolants: [String: Set<String>] = [:]
 
     func next(text: String, lineNumber: Int) throws {
-        let unrecognizedException = StageException.UnrecognizedContent(
+        let unrecognizedException = StageException.unrecognizedContent(
             message: "Expected a property setter statement on line \(lineNumber)\nsaw '\(text)'",
             line: lineNumber,
             backtrace: [])
 
-        if case let leftTrimmed = text.leftTrimmed() where leftTrimmed.hasPrefix(".") {
+        if case let leftTrimmed = text.leftTrimmed(), leftTrimmed.hasPrefix(".") {
             commitCurrent()
 
             var propertyName: NSString?
-            let scanner = NSScanner(string: leftTrimmed)
-            scanner.charactersToBeSkipped = .whitespaceCharacterSet()
-            let scan1 = scanner.scanString(".", intoString: nil)
-            let scan2 = scanner.scanCharactersFromSet(.alphanumericCharacterSet(), intoString: &propertyName)
-            let scan3 = scanner.scanString("=", intoString: nil)
+            let scanner = Scanner(string: leftTrimmed)
+            scanner.charactersToBeSkipped = .whitespaces
+            let scan1 = scanner.scanString(".", into: nil)
+            let scan2 = scanner.scanCharacters(from: .alphanumerics, into: &propertyName)
+            let scan3 = scanner.scanString("=", into: nil)
 
-            if !(scan1 && scan2 && scan3 && propertyName?.length > 0) { throw unrecognizedException }
-
-            let scannedToIndex = scanner.string.startIndex.advancedBy(scanner.scanLocation)
+            if !(scan1 && scan2 && scan3 && (propertyName ?? "").length > 0) {
+                throw unrecognizedException
+            }
+            
+            let scannedToIndex = leftTrimmed.index(leftTrimmed.startIndex, offsetBy: scanner.scanLocation)
             currentName = propertyName as? String
-            currentValue = leftTrimmed.substringFromIndex(scannedToIndex).trimmed()
+            currentValue = leftTrimmed.substring(from: scannedToIndex).trimmed()
             currentLineNumber = lineNumber
         } else {
             if currentName == nil { throw unrecognizedException }
-            currentValue!.appendContentsOf("\n\(text.trimmed())")
+            currentValue!.append("\n\(text.trimmed())")
         }
     }
     func amend(declaration: StageDeclaration) {
@@ -91,8 +93,7 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
     }
 
     func commitCurrent() {
-        guard let propertyName = currentName else { return }
-        let value = String(self.currentValue!)
+        guard let propertyName = currentName, let value = currentValue else { return }
         if mapping.keys.contains(propertyName) {
             print("Warning. Overriding previously set value for property '\(propertyName)'\n\(mapping[propertyName])\nwith new value:\n\(value)")
         }
@@ -113,12 +114,12 @@ class PropertySettersInterpreter: StageDeclarationInterpreter {
         return try! NSRegularExpression(pattern: "#\\{[^\\{]*?\\}", options: .init(rawValue: 0))
     }()
     func interpolants(of string: String) -> Set<String> {
-        let matches = PropertySettersInterpreter.interpolantExpression.matchesInString(string, options: .init(rawValue: 0), range: string.entireRange)
+        let matches = PropertySettersInterpreter.interpolantExpression.matches(in: string, options: .init(rawValue: 0), range: string.entireRange)
         var values = Set<String>()
         for match in matches where match.range.length > 3 { // account for '#{}'
-            let start = string.startIndex.advancedBy(match.range.location + 2)
-            let end = start.advancedBy(match.range.length - 3)
-            let key = string.substringWithRange(start..<end)
+            let start = string.index(string.startIndex, offsetBy: match.range.location + 2)
+            let end = string.index(start, offsetBy: match.range.length - 3)
+            let key = string.substring(with: start..<end)
             values.insert(key)
         }
         return values
@@ -138,7 +139,7 @@ class ViewHierarchyInterpreter: StageDeclarationInterpreter {
     }
 
     func next(text: String, lineNumber: Int) throws {
-        guard case let viewName = text.trimmed() where !viewName.isEmpty else { return }
+        guard case let viewName = text.trimmed(), !viewName.isEmpty else { return }
         let indent = text.leadingIndent
         if firstLine {
             definitionLineNumber = lineNumber

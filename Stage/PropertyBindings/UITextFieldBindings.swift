@@ -21,63 +21,61 @@
 
 import Foundation
 
-private var propertyTable = {
-    return tap(StagePropertyRegistration()) {
-        $0.register("adjustsFontSizeToFitWidth") { scanner in try scanner.scanBool() }
-            .apply { (view: UITextField, value) in view.adjustsFontSizeToFitWidth = value }
-        $0.register("font") { scanner in try UIFont.create(using: scanner, defaultPointSize: 14) }
-            .apply { (view: UITextField, value) in view.font = value }
-        $0.register("minimumFontSize") { scanner in try scanner.scanCGFloat() }
-            .apply { (view: UITextField, value) in view.minimumFontSize = value }
-
-        $0.register("clearsOnBeginEditing") { scanner in try scanner.scanBool() }
-            .apply { (view: UITextField, value) in view.clearsOnBeginEditing = value }
-
-        $0.register("keyboardType") { scanner in try UIKeyboardType.create(using: scanner) }
-            .apply { (view: UITextField, value) in view.keyboardType = value }
-
-        $0.register("placeholder") { scanner in scanner.scanLinesTrimmed().joinWithSeparator("\n") }
-            .apply { (view: UITextField, value) in view.placeholder = value }
-
-        $0.register("secureTextEntry") { scanner in try scanner.scanBool() }
-            .apply { (view: UITextField, value) in view.secureTextEntry = value }
-
-        $0.register("text") { scanner in scanner.scanLinesTrimmed().joinWithSeparator("\n") }
-            .apply { (view: UITextField, value) in view.text = value }
-        $0.register("textAlignment") { scanner in try NSTextAlignment.create(using: scanner) }
-            .apply { (view: UITextField, value) in view.textAlignment = value }
-        $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
-            .apply { (view: UITextField, value) in view.textColor = value }
-
-        $0.register("clearButtonMode") { scanner in try UITextFieldViewMode.create(using: scanner) }
-            .apply { (view: UITextField, value) in view.clearButtonMode = value }
-        $0.register("leftViewMode") { scanner in try UITextFieldViewMode.create(using: scanner) }
-            .apply { (view: UITextField, value) in view.leftViewMode = value }
-        $0.register("rightViewMode") { scanner in try UITextFieldViewMode.create(using: scanner) }
-            .apply { (view: UITextField, value) in view.rightViewMode = value }
-
-
-        $0.register("inputAccessoryView") { scanner in scanner.string.trimmed() }
-            .apply { (view: UITextField, value, context) in
-                guard let accessoryView = try? context.view(named: value) else {
-                    print("Warning. inputAccessoryView '\(value)' for UITextField not present in the StageLiveContext")
-                    return
-                }
-                if let superview = accessoryView.superview {
-                    accessoryView.removeFromSuperview()
-                    superview.setNeedsUpdateConstraints()
-                }
-                view.inputAccessoryView = accessoryView
-                dispatch_async(dispatch_get_main_queue()) {
-                    let size = accessoryView.systemLayoutSizeFittingSize(UIScreen.mainScreen().bounds.size)
-                    let frame = accessoryView.frame
-                    accessoryView.frame = CGRect(origin: frame.origin, size: size)
-                }
+public extension StageRegister {
+    public class func TextField(_ registration: StagePropertyRegistration) {
+        tap(registration) {
+            $0.register("adjustsFontSizeToFitWidth") { scanner in try scanner.scanBool() }
+                .apply { (view: UITextField, value) in view.adjustsFontSizeToFitWidth = value }
+            $0.register("font") { scanner in try UIFont.create(using: scanner, defaultPointSize: 14) }
+                .apply { (view: UITextField, value) in view.font = value }
+            $0.register("minimumFontSize") { scanner in try scanner.scanCGFloat() }
+                .apply { (view: UITextField, value) in view.minimumFontSize = value }
+            
+            $0.register("clearsOnBeginEditing") { scanner in try scanner.scanBool() }
+                .apply { (view: UITextField, value) in view.clearsOnBeginEditing = value }
+            
+            $0.register("keyboardType") { scanner in try UIKeyboardType.create(using: scanner) }
+                .apply { (view: UITextField, value) in view.keyboardType = value }
+            
+            $0.register("placeholder") { scanner in scanner.scanLinesTrimmed().joined(separator: "\n") }
+                .apply { (view: UITextField, value) in view.placeholder = value }
+            
+            $0.register("secureTextEntry") { scanner in try scanner.scanBool() }
+                .apply { (view: UITextField, value) in view.isSecureTextEntry = value }
+            
+            $0.register("text") { scanner in scanner.scanLinesTrimmed().joined(separator: "\n") }
+                .apply { (view: UITextField, value) in view.text = value }
+            $0.register("textAlignment") { scanner in try NSTextAlignment.create(using: scanner) }
+                .apply { (view: UITextField, value) in view.textAlignment = value }
+            $0.register("textColor") { scanner in try UIColor.create(using: scanner) }
+                .apply { (view: UITextField, value) in view.textColor = value }
+            
+            $0.register("clearButtonMode") { scanner in try UITextFieldViewMode.create(using: scanner) }
+                .apply { (view: UITextField, value) in view.clearButtonMode = value }
+            $0.register("leftViewMode") { scanner in try UITextFieldViewMode.create(using: scanner) }
+                .apply { (view: UITextField, value) in view.leftViewMode = value }
+            $0.register("rightViewMode") { scanner in try UITextFieldViewMode.create(using: scanner) }
+                .apply { (view: UITextField, value) in view.rightViewMode = value }
+            
+            
+            $0.register("inputAccessoryView") { scanner in scanner.string.trimmed() }
+                .apply { (view: UITextField, value, context) in
+                    guard let accessoryView = try? context.view(named: value) else {
+                        print("Warning. inputAccessoryView '\(value)' for UITextField not present in the StageLiveContext")
+                        return
+                    }
+                    if let superview = accessoryView.superview {
+                        accessoryView.removeFromSuperview()
+                        superview.setNeedsUpdateConstraints()
+                    }
+                    view.inputAccessoryView = accessoryView
+                    DispatchQueue.main.async {
+                        let size = accessoryView.systemLayoutSizeFitting(UIScreen.main.bounds.size)
+                        let frame = accessoryView.frame
+                        accessoryView.frame = CGRect(origin: frame.origin, size: size)
+                    }
+            }
+            
         }
-
     }
-
-}()
-public extension UITextField {
-    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
 }

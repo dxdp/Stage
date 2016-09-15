@@ -21,15 +21,16 @@
 
 import Foundation
 
-private var propertyTable = {
-    return tap(StagePropertyRegistration()) {
-        $0.register("image") { scanner in scanner.string.trimmed() }
-            .apply { (view: UIImageView, value) in view.stageState.image = UIImage(named: value) }
-        $0.register("tintColor") { scanner in try UIColor.create(using: scanner) }
-            .apply { (view: UIImageView, value) in view.stageState.tintColor = value }
-
+public extension StageRegister {
+    public class func Image(_ registration: StagePropertyRegistration) {
+        tap(registration) {
+            $0.register("image") { scanner in scanner.string.trimmed() }
+                .apply { (view: UIImageView, value) in view.stageState.image = UIImage(named: value) }
+            $0.register("tintColor") { scanner in try UIColor.create(using: scanner) }
+                .apply { (view: UIImageView, value) in view.stageState.tintColor = value }
+        }
     }
-}()
+}
 public extension UIImageView {
     @objc class UIImageViewStageState: NSObject {
         static var AssociationKey = 0
@@ -51,7 +52,7 @@ public extension UIImageView {
             self.owner = owner
         }
 
-        private func updateImage() {
+        fileprivate func updateImage() {
             guard let view = owner else { return }
             var effectiveImage: UIImage? = image
             if let tint = tintColor {
@@ -61,7 +62,6 @@ public extension UIImageView {
         }
     }
 
-    public override dynamic class func stagePropertyRegistration() -> StagePropertyRegistration { return propertyTable }
     var stageState : UIImageViewStageState {
         if let state = associatedObject(key: &UIImageViewStageState.AssociationKey) as? UIImageViewStageState { return state }
         let state = UIImageViewStageState(owner: self)

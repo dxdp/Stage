@@ -22,10 +22,10 @@
 import Foundation
 
 public extension UIActivityIndicatorViewStyle {
-    private static let nameMap : [String: UIActivityIndicatorViewStyle] = {
-        [ "white": .White,
-          "whitelarge": .WhiteLarge,
-          "gray": .Gray ]
+    fileprivate static let nameMap : [String: UIActivityIndicatorViewStyle] = {
+        [ "white": .white,
+          "whitelarge": .whiteLarge,
+          "gray": .gray ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIActivityIndicatorViewStyle {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

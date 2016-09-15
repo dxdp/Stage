@@ -25,11 +25,11 @@ public extension CGPoint {
     public static func create(using scanner: StageRuleScanner) throws -> CGPoint {
         let dims = try scanner.scanBracedList(open: "{", close: "}", itemScan: scanner.scanCGFloat())
         guard dims.count == 2 else {
-            throw StageException.UnrecognizedContent(
+            throw StageException.unrecognizedContent(
                 message: "Expected point to be in format: {x, y}, but saw \(scanner.string)",
                 line: scanner.startingLine,
                 backtrace: [])
         }
-        return CGPointMake(dims[0], dims[1])
+        return CGPoint(x: dims[0], y: dims[1])
     }
 }

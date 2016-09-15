@@ -22,10 +22,10 @@
 import Foundation
 
 public extension UIBlurEffectStyle {
-    private static let nameMap : [String: UIBlurEffectStyle] = {
-        [ "extralight": .ExtraLight,
-          "light": .Light,
-          "dark": .Dark ]
+    fileprivate static let nameMap : [String: UIBlurEffectStyle] = {
+        [ "extralight": .extraLight,
+          "light": .light,
+          "dark": .dark ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIBlurEffectStyle {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

@@ -25,22 +25,22 @@ public extension UIImage {
     public convenience init(color: UIColor, size: CGSize) {
         UIGraphicsBeginImageContext(size)
         color.setFill()
-        CGContextFillRect(UIGraphicsGetCurrentContext(), CGRect(origin: .zero, size: size))
-        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsGetCurrentContext()?.fill(CGRect(origin: .zero, size: size))
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         // Note we can safely unwrap the CGImage, because we are initializing with core graphics
-        self.init(CGImage: image.CGImage!)
+        self.init(cgImage: image.cgImage!)
     }
 
-    public func copyWithTint(color: UIColor) -> UIImage? {
+    public func copyWithTint(_ color: UIColor) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         let context = UIGraphicsGetCurrentContext()
 
-        drawAtPoint(.zero, blendMode: .Normal, alpha: 1)
+        draw(at: .zero, blendMode: .normal, alpha: 1)
         color.setFill()
-        CGContextSetBlendMode(context, .SourceIn);
-        CGContextSetAlpha(context, 1.0);
-        CGContextFillRect(context, CGRect(origin: .zero, size: size))
+        context?.setBlendMode(.sourceIn);
+        context?.setAlpha(1.0);
+        context?.fill(CGRect(origin: .zero, size: size))
         let tintedImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         return tintedImage;

@@ -22,13 +22,13 @@
 import Foundation
 
 public extension NSLineBreakMode {
-    private static let nameMap : [String: NSLineBreakMode] = {
-        [ "wordwrapping": .ByWordWrapping,
-          "charwrapping": .ByCharWrapping,
-          "clipping": .ByClipping,
-          "truncatinghead": .ByTruncatingHead,
-          "truncatingtail": .ByTruncatingTail,
-          "truncatingmiddle": NSLineBreakMode.ByTruncatingMiddle]
+    fileprivate static let nameMap : [String: NSLineBreakMode] = {
+        [ "wordwrapping": .byWordWrapping,
+          "charwrapping": .byCharWrapping,
+          "clipping": .byClipping,
+          "truncatinghead": .byTruncatingHead,
+          "truncatingtail": .byTruncatingTail,
+          "truncatingmiddle": NSLineBreakMode.byTruncatingMiddle]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> NSLineBreakMode {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

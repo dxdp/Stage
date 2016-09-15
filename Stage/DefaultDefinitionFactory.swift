@@ -23,71 +23,78 @@ import Foundation
 
 class StageDefinitionIndex {
     var dict: [String:String]
-    init(bundles: [NSBundle]) {
+    init(bundles: [Bundle]) {
         dict = [:]
         for bundle in bundles {
-            let paths = bundle.pathsForResourcesOfType("stage", inDirectory: "")
+            let paths = bundle.paths(forResourcesOfType: "stage", inDirectory: "")
             paths.forEach { path in
-                dict[(path as NSString).lastPathComponent.lowercaseString] = path
+                dict[(path as NSString).lastPathComponent.lowercased()] = path
             }
         }
     }
 }
 
-public class DefaultDefinitionFactory : StageDefinitionFactory {
+open class DefaultDefinitionFactory : StageDefinitionFactory {
     let index: StageDefinitionIndex
     var errorListener: StageDefinitionErrorListener?
+    let propertyRegistrar: PropertyRegistrar
 
-    public init(bundles: [NSBundle] = [.mainBundle()] + NSBundle.allFrameworks()) {
+    public init(bundles: [Bundle] = [.main] + Bundle.allFrameworks) {
         index = StageDefinitionIndex(bundles: bundles)
+        propertyRegistrar = tap(PropertyRegistrar()) { StageRegister.LoadDefaults($0) }
     }
-    public func build(data data: NSData) throws -> StageDefinition {
+    open func registerTypes(_ block: (PropertyRegistrar) -> ()) -> Void {
+        block(propertyRegistrar)
+    }
+    
+    open func build(data: Data) throws -> StageDefinition {
         do {
-            return try self.build(data: data, encoding: NSUTF8StringEncoding)
+            return try self.build(data: data, encoding: String.Encoding.utf8)
         } catch let ex as StageException {
             errorListener?.error(ex)
             throw ex
         }
 
     }
-    public func build(contentsOfFile file: String) throws -> StageDefinition {
+    open func build(contentsOfFile file: String) throws -> StageDefinition {
         do {
-            return try self.build(contentsOfFile: file, encoding: NSUTF8StringEncoding)
+            return try self.build(contentsOfFile: file, encoding: String.Encoding.utf8)
         } catch let ex as StageException {
             errorListener?.error(ex)
             throw ex
         }
     }
 
-    public func build(data data: NSData, encoding: NSStringEncoding) throws -> StageDefinition {
+    open func build(data: Data, encoding: String.Encoding) throws -> StageDefinition {
         return try build(data: data, encoding: encoding, identifier: "")
     }
 
-    private func build(data data: NSData, encoding: NSStringEncoding, identifier: String) throws -> StageDefinition {
+    fileprivate func build(data: Data, encoding: String.Encoding, identifier: String) throws -> StageDefinition {
         do {
             guard let string = String(data: data, encoding: encoding) else {
-                throw StageException.InvalidDataEncoding(backtrace: [])
+                throw StageException.invalidDataEncoding(backtrace: [])
             }
-            let lines = string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\r\n"))
-            return try StageParser(errorListener: errorListener).parse(lines, identifier: identifier)
+            let lines = string.components(separatedBy: CharacterSet(charactersIn: "\r\n"))
+            let definition = try StageParser(propertyRegistrar: propertyRegistrar, errorListener: errorListener).parse(lines, identifier: identifier)
+            return definition
         } catch let ex as StageException {
             errorListener?.error(ex)
             throw ex
         }
     }
 
-    public func use(errorListener: StageDefinitionErrorListener) {
+    open func use(_ errorListener: StageDefinitionErrorListener) {
         self.errorListener = errorListener
     }
 
-    public func build(contentsOfFile file: String, encoding: NSStringEncoding) throws -> StageDefinition {
+    open func build(contentsOfFile file: String, encoding: String.Encoding) throws -> StageDefinition {
         do {
             let inputFile = file
             var file = inputFile
             if !file.hasPrefix("/") { file = try fullPathInBundle(file) }
             // TODO: caching of definitions
-            if let data = NSData(contentsOfFile: file) { return try build(data: data, encoding: encoding, identifier: file) }
-            throw StageException.ResourceNotAvailable(name: inputFile,
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: file)) { return try build(data: data, encoding: encoding, identifier: file) }
+            throw StageException.resourceNotAvailable(name: inputFile,
                                                       message: "File could not be found in the main or framework bundles",
                                                       backtrace: [])
         } catch var ex as StageException {
@@ -97,9 +104,9 @@ public class DefaultDefinitionFactory : StageDefinitionFactory {
         }
     }
 
-    func fullPathInBundle(file: String) throws -> String {
-        if let str = index.dict[file] { return str }
-        throw StageException.ResourceNotAvailable(name: file,
+    func fullPathInBundle(_ file: String) throws -> String {
+        if let str = index.dict[file.lowercased()] { return str }
+        throw StageException.resourceNotAvailable(name: file,
                                                   message: "File could not be found in the main or framework bundles",
                                                   backtrace: [])
     }

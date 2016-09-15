@@ -21,13 +21,13 @@
 
 import Foundation
 
-public class Mapper {
+open class Mapper {
     let context: StageLiveContext
     init(context: StageLiveContext) {
         self.context = context
     }
 
-    public func view<T:UIView>(named name: String) throws -> T {
+    open func view<T:UIView>(named name: String) throws -> T {
         return try context.view(named: name)
     }
 }

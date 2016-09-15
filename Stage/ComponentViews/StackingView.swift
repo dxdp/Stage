@@ -23,63 +23,63 @@ import Foundation
 import UIKit
 
 public enum StackingDirection {
-    case Horizontal
-    case Vertical
+    case horizontal
+    case vertical
 
-    private var stackingAttributes: (NSLayoutAttribute, NSLayoutAttribute) {
+    fileprivate var stackingAttributes: (NSLayoutAttribute, NSLayoutAttribute) {
         switch self {
-        case .Horizontal: return (.Leading, .Trailing)
-        case .Vertical: return (.Top, .Bottom)
+        case .horizontal: return (.leading, .trailing)
+        case .vertical: return (.top, .bottom)
         }
     }
 }
 
 public enum StackingAlignment {
-    case AlignFirst
-    case AlignLast
-    case AlignBoth
-    case AlignNeither
+    case alignFirst
+    case alignLast
+    case alignBoth
+    case alignNeither
 
-    private func aligningAttributes(for direction: StackingDirection) -> (NSLayoutAttribute, NSLayoutAttribute) {
+    fileprivate func aligningAttributes(for direction: StackingDirection) -> (NSLayoutAttribute, NSLayoutAttribute) {
         switch direction {
-        case .Horizontal: return (.Top, .Bottom)
-        case .Vertical: return (.Leading, .Trailing)
+        case .horizontal: return (.top, .bottom)
+        case .vertical: return (.leading, .trailing)
         }
     }
 }
 
-public class StackingView: UIView {
-    public var stackingAlignment: StackingAlignment = .AlignBoth {
+open class StackingView: UIView {
+    open var stackingAlignment: StackingAlignment = .alignBoth {
         didSet {
             setNeedsUpdateConstraints()
         }
     }
-    public var stackingDirection: StackingDirection = .Vertical {
+    open var stackingDirection: StackingDirection = .vertical {
         didSet {
             setNeedsUpdateConstraints()
         }
     }
-    public var contentInset = UIEdgeInsetsZero {
+    open var contentInset = UIEdgeInsets.zero {
         didSet {
             setNeedsUpdateConstraints()
         }
     }
-    public var spacing: CGFloat = 0 {
+    open var spacing: CGFloat = 0 {
         didSet {
             setNeedsUpdateConstraints()
         }
     }
 
     var activeStackingConstraints: [NSLayoutConstraint] = []
-    public override func updateConstraints() {
+    open override func updateConstraints() {
         if !activeStackingConstraints.isEmpty {
-            NSLayoutConstraint.deactivateConstraints(activeStackingConstraints)
+            NSLayoutConstraint.deactivate(activeStackingConstraints)
             activeStackingConstraints.removeAll()
         }
 
         let (stackFirst, stackSecond) = stackingDirection.stackingAttributes
         let (alignFirst, alignSecond) = stackingAlignment.aligningAttributes(for: stackingDirection)
-        let viewsToStack = subviews.flatMap { $0.hidden ? nil : $0 }
+        let viewsToStack = subviews.flatMap { $0.isHidden ? nil : $0 }
         if !viewsToStack.isEmpty {
             var previous: UIView = viewsToStack.first!
             for view in viewsToStack[1..<viewsToStack.count] {
@@ -88,14 +88,14 @@ public class StackingView: UIView {
             }
             for view in viewsToStack {
                 switch stackingAlignment {
-                case .AlignFirst:
+                case .alignFirst:
                     activeStackingConstraints.append(view.constrain(attribute: alignFirst, to: self, attribute: alignFirst, constant: insetForAttribute(alignFirst)))
-                case .AlignLast:
+                case .alignLast:
                     activeStackingConstraints.append(view.constrain(attribute: alignSecond, to: self, attribute: alignSecond, constant: -insetForAttribute(alignSecond)))
-                case .AlignBoth:
+                case .alignBoth:
                     activeStackingConstraints.append(view.constrain(attribute: alignFirst, to: self, attribute: alignFirst, constant: insetForAttribute(alignFirst)))
                     activeStackingConstraints.append(view.constrain(attribute: alignSecond, to: self, attribute: alignSecond, constant: -insetForAttribute(alignSecond)))
-                case .AlignNeither:
+                case .alignNeither:
                     break
                 }
             }
@@ -106,22 +106,22 @@ public class StackingView: UIView {
         super.updateConstraints()
     }
 
-    private func insetForAttribute(attribute: NSLayoutAttribute) -> CGFloat {
+    fileprivate func insetForAttribute(_ attribute: NSLayoutAttribute) -> CGFloat {
         switch attribute {
-        case .Top: return contentInset.top
-        case .Bottom: return contentInset.bottom
-        case .Leading, .Left: return contentInset.left
-        case .Trailing, .Right: return contentInset.right
+        case .top: return contentInset.top
+        case .bottom: return contentInset.bottom
+        case .leading, .left: return contentInset.left
+        case .trailing, .right: return contentInset.right
         default: return 0
         }
     }
 
-    public override func didAddSubview(subview: UIView) {
+    open override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
         setNeedsUpdateConstraints()
     }
 
-    public override func willRemoveSubview(subview: UIView) {
+    open override func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
         setNeedsUpdateConstraints()
     }

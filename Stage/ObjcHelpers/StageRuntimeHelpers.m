@@ -24,28 +24,12 @@
 #import "objc/runtime.h"
 #import <dlfcn.h>
 
-@implementation NSObject (StageRuntimeHelpers)
-+ (nullable id) stagePropertyRegistration { return nil; }
-@end
-
 @implementation StageRuntimeHelpers
 
 // TODO: Inject view factory definitions
 + (UIView *)makeViewWithClass:(Class)cls {
     NSAssert([cls isSubclassOfClass:[UIView class]], @"Must be subclass of UIView");
     return [[cls alloc] initWithFrame:CGRectZero];
-}
-
-+ (NSArray *)inheritanceChainRegistriesForView:(UIView *)view {
-    Class current = view.class;
-    Class final = [UIView superclass];
-    NSMutableArray* chain = [NSMutableArray new];
-    while (current != final) {
-        id next = [current stagePropertyRegistration];
-        if (next && chain.lastObject != next) { [chain addObject:next]; }
-        current = current.superclass;
-    }
-    return [chain copy];
 }
 
 + (void)loadReveal {
@@ -61,7 +45,5 @@
     });
 #endif
 }
-
-
 
 @end

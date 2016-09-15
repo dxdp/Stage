@@ -1,5 +1,5 @@
 //
-//  Utilities.swift
+//  PropertyRegistrar.swift
 //  Stage
 //
 //  Copyright © 2016 David Parton
@@ -19,29 +19,33 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+import UIKit
 
-@discardableResult
-public func tap<T>(_ some: T, function: (T) -> ()) -> T {
-    function(some)
-    return some
-}
+open class PropertyRegistrar {
+    var table: [String: StagePropertyRegistration] = [:]
 
-public extension Collection {
-    subscript (safe index: Index) -> Iterator.Element? {
-        let d = distance(from: startIndex, to: index)
-        guard d >= 0 && d < count else { return nil }
-        return self[index]
+    public typealias RegistrationFunction = (StagePropertyRegistration) -> ()
+    open func register<ViewType: UIView>(type: ViewType.Type = ViewType.self, registration: @escaping RegistrationFunction) {
+        let key = "\(type.self)"
+        if let existing = table[key] {
+            registration(existing)
+        } else {
+            let new = StagePropertyRegistration()
+            registration(new)
+            table[key] = new
+        }
     }
-}
-
-func -<T> (left: Set<T>, right: Set<T>) -> Set<T> {
-    return Set(left.flatMap { right.contains($0) ? nil : $0 })
-}
-
-private let _nwscs = { CharacterSet.whitespaces.inverted }()
-private let _hexnumericcs = { CharacterSet(charactersIn: "0123456789abcdefABCDEF") }()
-extension CharacterSet {
-    static func nonwhitespaceCharacterSet() -> CharacterSet { return _nwscs }
-    static func hexnumericCharacterSet() -> CharacterSet { return _hexnumericcs }
+    
+    open func registry<ViewType: UIView>(for view: ViewType) -> [StagePropertyRegistration] {
+        var type: AnyClass? = type(of: view)//ViewType.self
+        var registry = [StagePropertyRegistration]()
+        while type != nil {
+            let key = "\(type!.self)"
+            if let existing = table[key] {
+                registry.append(existing)
+            }
+            type = type!.superclass()
+        }
+        return registry
+    }
 }

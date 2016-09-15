@@ -21,31 +21,31 @@
 
 import Foundation
 
-public enum StageException: ErrorType {
-    case InvalidDataEncoding(backtrace: [String])
-    case InvalidViewType(message: String, backtrace: [String])
-    case ResourceNotAvailable(name: String, message: String, backtrace: [String])
-    case UnhandledProperty(message: String, line: Int, backtrace: [String])
-    case UnknownView(message: String, backtrace: [String])
-    case UnknownViewHierarchy(message: String, backtrace: [String])
-    case UnrecognizedContent(message: String, line: Int, backtrace: [String])
+public enum StageException: Error {
+    case invalidDataEncoding(backtrace: [String])
+    case invalidViewType(message: String, backtrace: [String])
+    case resourceNotAvailable(name: String, message: String, backtrace: [String])
+    case unhandledProperty(message: String, line: Int, backtrace: [String])
+    case unknownView(message: String, backtrace: [String])
+    case unknownViewHierarchy(message: String, backtrace: [String])
+    case unrecognizedContent(message: String, line: Int, backtrace: [String])
 
-    func withBacktraceMessage(backtraceMessage: String) -> StageException {
+    func withBacktraceMessage(_ backtraceMessage: String) -> StageException {
         switch self {
-        case .InvalidDataEncoding(let bt):
-            return .InvalidDataEncoding(backtrace: bt + [backtraceMessage])
-        case .InvalidViewType(let message, let bt):
-            return .InvalidViewType(message: message, backtrace: bt + [backtraceMessage])
-        case .ResourceNotAvailable(let name, let message, let bt):
-            return .ResourceNotAvailable(name: name, message: message, backtrace: bt + [backtraceMessage])
-        case .UnknownView(let message, let bt):
-            return .UnknownView(message: message, backtrace: bt + [backtraceMessage])
-        case .UnknownViewHierarchy(let message, let bt):
-            return .UnknownViewHierarchy(message: message, backtrace: bt + [backtraceMessage])
-        case .UnhandledProperty(let message, let line, let bt):
-            return .UnhandledProperty(message: message, line: line, backtrace: bt + [backtraceMessage])
-        case .UnrecognizedContent(let message, let line, let bt):
-            return .UnrecognizedContent(message: message, line: line, backtrace: bt + [backtraceMessage])
+        case .invalidDataEncoding(let bt):
+            return .invalidDataEncoding(backtrace: bt + [backtraceMessage])
+        case .invalidViewType(let message, let bt):
+            return .invalidViewType(message: message, backtrace: bt + [backtraceMessage])
+        case .resourceNotAvailable(let name, let message, let bt):
+            return .resourceNotAvailable(name: name, message: message, backtrace: bt + [backtraceMessage])
+        case .unknownView(let message, let bt):
+            return .unknownView(message: message, backtrace: bt + [backtraceMessage])
+        case .unknownViewHierarchy(let message, let bt):
+            return .unknownViewHierarchy(message: message, backtrace: bt + [backtraceMessage])
+        case .unhandledProperty(let message, let line, let bt):
+            return .unhandledProperty(message: message, line: line, backtrace: bt + [backtraceMessage])
+        case .unrecognizedContent(let message, let line, let bt):
+            return .unrecognizedContent(message: message, line: line, backtrace: bt + [backtraceMessage])
         }
     }
 }

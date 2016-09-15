@@ -25,11 +25,11 @@ public extension CGSize {
     public static func create(using scanner: StageRuleScanner) throws -> CGSize {
         let dims = try scanner.scanBracedList(open: "{", close: "}", itemScan: scanner.scanCGFloat())
         guard dims.count == 2 else {
-            throw StageException.UnrecognizedContent(
+            throw StageException.unrecognizedContent(
                 message: "Expected size to be in format: {width, height}, but saw \(scanner.string)",
                 line: scanner.startingLine,
                 backtrace: [])
         }
-        return CGSizeMake(dims[0], dims[1])
+        return CGSize(width: dims[0], height: dims[1])
     }
 }

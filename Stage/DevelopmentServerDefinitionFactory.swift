@@ -21,13 +21,13 @@
 
 import Foundation
 
-public class DevelopmentServerDefinitionFactory : DefaultDefinitionFactory {
-    public override init(bundles: [NSBundle] = [.mainBundle()] + NSBundle.allFrameworks()) {
+open class DevelopmentServerDefinitionFactory : DefaultDefinitionFactory {
+    public override init(bundles: [Bundle] = [.main] + Bundle.allFrameworks) {
         super.init(bundles: bundles)
     }
-    public override func build(contentsOfFile file: String, encoding: NSStringEncoding) throws -> StageDefinition {
-        let devServerURL = NSURL(string: "http://localhost:34567/\(file)")
-        if let url = devServerURL, data = NSData(contentsOfURL: url) {
+    open override func build(contentsOfFile file: String, encoding: String.Encoding) throws -> StageDefinition {
+        let devServerURL = URL(string: "http://localhost:34567/\(file)")
+        if let url = devServerURL, let data = try? Data(contentsOf: url) {
             return try build(data: data, encoding: encoding)
         }
         return try super.build(contentsOfFile: file, encoding: encoding)

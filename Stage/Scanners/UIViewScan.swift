@@ -22,14 +22,14 @@
 import Foundation
 
 public extension UIViewAutoresizing {
-    private static let nameMap : [String: UIViewAutoresizing] = {
-        [ "width": .FlexibleWidth,
-          "height": .FlexibleHeight,
-          "top": .FlexibleTopMargin,
-          "left": .FlexibleLeftMargin,
-          "right": .FlexibleRightMargin,
-          "bottom": .FlexibleBottomMargin,
-          "none": .None ]
+    fileprivate static let nameMap : [String: UIViewAutoresizing] = {
+        [ "width": .flexibleWidth,
+          "height": .flexibleHeight,
+          "top": .flexibleTopMargin,
+          "left": .flexibleLeftMargin,
+          "right": .flexibleRightMargin,
+          "bottom": .flexibleBottomMargin,
+          "none": UIViewAutoresizing() ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIViewAutoresizing {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)
@@ -37,20 +37,20 @@ public extension UIViewAutoresizing {
 }
 
 public extension UIViewContentMode {
-    private static let nameMap : [String: UIViewContentMode] = {
-        [ "scaletofill": .ScaleToFill,
-          "scaleaspectfit": .ScaleAspectFit,
-          "scaleaspectfill": .ScaleAspectFill,
-          "redraw": .Redraw,
-          "center": .Center,
-          "top": .Top,
-          "bottom": .Bottom,
-          "left": .Left,
-          "right": .Right,
-          "topleft": .TopLeft,
-          "topright": .TopRight,
-          "bottomleft": .BottomLeft,
-          "bottomright": .BottomRight ]
+    fileprivate static let nameMap : [String: UIViewContentMode] = {
+        [ "scaletofill": .scaleToFill,
+          "scaleaspectfit": .scaleAspectFit,
+          "scaleaspectfill": .scaleAspectFill,
+          "redraw": .redraw,
+          "center": .center,
+          "top": .top,
+          "bottom": .bottom,
+          "left": .left,
+          "right": .right,
+          "topleft": .topLeft,
+          "topright": .topRight,
+          "bottomleft": .bottomLeft,
+          "bottomright": .bottomRight ]
     }()
     public static func create(using scanner: StageRuleScanner) throws -> UIViewContentMode {
         return try EnumScanner(map: nameMap, lineNumber: scanner.startingLine).scan(using: scanner)

@@ -21,29 +21,29 @@
 
 import Foundation
 
-public class EnumScanner<EnumType> {
-    private let map: [String: EnumType]
-    private let lineNumber: Int
-    private let characterSet: NSCharacterSet
-    public init(map: [String: EnumType], lineNumber: Int, characterSet: NSCharacterSet = .alphanumericCharacterSet()) {
+open class EnumScanner<EnumType> {
+    fileprivate let map: [String: EnumType]
+    fileprivate let lineNumber: Int
+    fileprivate let characterSet: CharacterSet
+    public init(map: [String: EnumType], lineNumber: Int, characterSet: CharacterSet = .alphanumerics) {
         map.keys.forEach { key in
-            assert(key.trimmed().lowercaseString == key, "All keys in the enum value map should be lowercase and trimmed. Failing for '\(key)'")
+            assert(key.trimmed().lowercased() == key, "All keys in the enum value map should be lowercase and trimmed. Failing for '\(key)'")
         }
         self.map = map
         self.lineNumber = lineNumber
         self.characterSet = characterSet
     }
 
-    public func scan(using scanner: NSScanner) throws -> EnumType {
+    open func scan(using scanner: Scanner) throws -> EnumType {
         var word: NSString?
-        guard scanner.scanCharactersFromSet(characterSet, intoString: &word) && word != nil else {
-            throw StageException.UnrecognizedContent(
+        guard scanner.scanCharacters(from: characterSet, into: &word) && word != nil else {
+            throw StageException.unrecognizedContent(
                 message: "Unrecognized value \(scanner.string) for \(EnumType.self). Possible values: \(Array(map.keys))",
                 line: lineNumber,
                 backtrace: [])
         }
         guard let value = map[word as! String] else {
-            throw StageException.UnrecognizedContent(
+            throw StageException.unrecognizedContent(
                 message: "Unrecognized value \(scanner.string) for \(EnumType.self). Possible values: \(Array(map.keys))",
                 line: lineNumber,
                 backtrace: [])
